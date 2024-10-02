@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro usuario - Amigopet</title>
+    <link rel="stylesheet" href="./style/style-cadastro-usuario.css" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Jomolhari&display=swap");
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <a href="../html/index.html">
+        <img src="./assets/logo-menor.svg" id="logo" alt="logo amigopet" />
+      </a>
+    </header>
+    <div class="frase">
+      <h4>Adotante, Cadastre-se aqui</h4>
+    </div>
+    <div class="form-container">
+      <div class="form">
+        <h1 class="titulo-form">Cadastro Adotante</h1>
+        <form action="../controllers/cadastroUsuario" method="POST">
+          <div class="caixa-input">
+            <div>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                placeholder="Email"
+              />
+            </div>
+            <div class="div-input">
+              <input
+                type="password"
+                id="password"
+                name="senha"
+                required
+                placeholder="Crie sua senha"
+              />
+            </div>
+            <div class="div-input">
+              <input
+                type="password"
+                id="password-confirm"
+                name="confirmar-senha"
+                required
+                placeholder="Confirme sua senha"
+              />
+            </div>
+            <div class="div-input">
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="Seu numero de telefone"
+                required
+              />
+            </div>
+            <div class="div-input">
+              <input
+                type="text"
+                id="name"
+                name="nome"
+                required
+                placeholder="Nome completo"
+              />
+            </div>
+            <div class="div-input">
+              <input
+                type="number"
+                id="cpf"
+                name="cpf"
+                required
+                placeholder="Seu CPF"
+              />
+            </div>
+          </div>
+          <div class="div-input">
+            <input type="submit" id="submit-button" value="Confirmar" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

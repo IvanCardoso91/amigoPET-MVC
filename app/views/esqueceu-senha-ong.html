@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recuperar senha - Amigopet</title>
+    <link rel="stylesheet" href="../style/style-esquece-senha.css" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Jomolhari&display=swap");
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <a href="../html/index.html">
+        <img src="../assets/logo-menor.svg" id="logo" alt="logo amigopet" />
+      </a>
+    </header>
+    <div class="form-container">
+      <div class="form">
+        <h1 class="titulo">Recuperar senha</h1>
+        <h4 class="titulo">Informe o CNPJ de sua ONG</h4>
+        <div class="div-input">
+          <input
+            type="email"
+            id="email-input"
+            name="email"
+            required
+            placeholder="CNPJ"
+          />
+        </div>
+        <input type="submit" id="submit-button" value="Confirmar" />
+      </div>
+    </div>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Sua senha foi enviada ao e-mail vinculado ao CNPJ informado</p>
+      </div>
+    </div>
+    <script>
+      var modal = document.getElementById("myModal");
+
+      var span = document.getElementsByClassName("close")[0];
+
+      span.onclick = function () {
+        modal.style.display = "none";
+        window.location = "../html/login-ong.html";
+      };
+
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+          window.location = "../html/login-ong.html";
+        }
+      };
+
+      document
+        .getElementById("submit-button")
+        .addEventListener("click", function (event) {
+          modal.style.display = "block";
+        });
+    </script>
+  </body>
+</html>
