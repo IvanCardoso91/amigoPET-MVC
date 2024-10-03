@@ -22,7 +22,7 @@
     <div class="form-container">
       <div class="form">
         <h1 class="titulo-form">Cadastro Adotante</h1>
-        <form action="../controllers/cadastroUsuario" method="POST">
+        <form action="../../cadastro-adotante.php" method="POST">
           <div class="caixa-input">
             <div>
               <input
@@ -36,7 +36,7 @@
             <div class="div-input">
               <input
                 type="password"
-                id="password"
+                id="senha"
                 name="senha"
                 required
                 placeholder="Crie sua senha"
@@ -44,18 +44,9 @@
             </div>
             <div class="div-input">
               <input
-                type="password"
-                id="password-confirm"
-                name="confirmar-senha"
-                required
-                placeholder="Confirme sua senha"
-              />
-            </div>
-            <div class="div-input">
-              <input
                 type="tel"
-                id="phone"
-                name="phone"
+                id="telefone"
+                name="telefone"
                 placeholder="Seu numero de telefone"
                 required
               />
@@ -63,8 +54,8 @@
             <div class="div-input">
               <input
                 type="text"
-                id="name"
-                name="nome"
+                id="nome_completo"
+                name="nome_completo"
                 required
                 placeholder="Nome completo"
               />
@@ -76,6 +67,15 @@
                 name="cpf"
                 required
                 placeholder="Seu CPF"
+              />
+            </div>
+            <div class="div-input">
+              <input
+                type="date"
+                id="data_nascimento"
+                name="data_nascimento"
+                required
+                placeholder="Data de Nascimento"
               />
             </div>
           </div>

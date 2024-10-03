@@ -4,12 +4,11 @@
 class Database
 {
     private $host = "localhost";
-    private $db_name = "cadastro";
+    private $db_name = "amigopet";
     private $username = "root";
     private $password = "";
     public $conn;
 
-    // Método para obter a conexão com o banco de dados
     public function getConnection()
     {
         $this->conn = null;
