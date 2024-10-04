@@ -19,11 +19,10 @@ class UsuarioAdotanteController
 
             if ($usuarioAdotante->cadastrar()) {
                 echo "Cadastro realizado com sucesso!";
+                require __DIR__ . '../../views/sucesso-cadastro-usuario.html';
             } else {
                 echo "Erro ao cadastrar!";
             }
         }
-
-        require __DIR__ . '../../views/cadastro-usuario.html';
     }
 }
