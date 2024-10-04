@@ -13,7 +13,7 @@ class UsuarioAdotante
     public $data_nascimento;
     public $status_cadastro;
 
-    // Construtor
+    // Construtor (nada mais é que antes de começar qualquer código ele "constroi" a base, nesse caso ele esta se conectando ao banco que ja existe para entao começar a fazer o que precisa ser feito)
     public function __construct($db)
     {
         $this->conn = $db;
@@ -22,7 +22,7 @@ class UsuarioAdotante
     // Método para cadastrar um novo adotante
     public function cadastrar()
     {
-        // Query de inserção
+        // Query de inserção - aqui eu fiz uma query de adicionar ou gravar itens na tabela, mas na model pode ser criado querys de BUSCA ou até mesmo de CRIAR novas tabelas
         $query = "INSERT INTO " . $this->table_name . " 
                   (nome_completo, email, telefone, cpf, senha, data_nascimento, status_cadastro) 
                   VALUES (?, ?, ?, ?, ?, ?, ?)";
