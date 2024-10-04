@@ -16,6 +16,7 @@ class UsuarioAdotanteController
             $usuarioAdotante->telefone = $_POST['telefone'];
             $usuarioAdotante->senha = $_POST['senha'];
             $usuarioAdotante->cpf = $_POST['cpf'];
+            $usuarioAdotante->data_nascimento = $_POST['data_nascimento'];
 
             if ($usuarioAdotante->cadastrar()) {
                 echo "Cadastro realizado com sucesso!";
