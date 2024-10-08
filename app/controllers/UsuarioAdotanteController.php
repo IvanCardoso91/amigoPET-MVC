@@ -29,4 +29,31 @@ class UsuarioAdotanteController
             }
         }
     }
+
+    public function login()
+    {
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $database = new Database();
+            $db = $database->getConnection();
+
+            $usuarioAdotante = new UsuarioAdotante($db);
+
+            // Captura os dados do formulário de login
+            $email = $_POST['email'];
+            $senha = $_POST['senha'];
+
+            // Verifica se o login foi bem-sucedido
+            if ($usuarioAdotante->login($email, $senha)) {
+                echo "Login realizado com sucesso!";
+                // Redirecionar para a página inicial ou painel
+
+                exit();
+            } else {
+                echo "Email ou senha incorretos!";
+                // Exibir mensagem de erro ou redirecionar para a página de login novamente
+
+                exit();
+            }
+        }
+    }
 }

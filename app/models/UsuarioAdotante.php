@@ -56,4 +56,53 @@ class UsuarioAdotante
             return false;
         }
     }
+    public function login($email, $senha)
+    {
+        // Query para buscar o usuário pelo email
+        $query = "SELECT nome_completo, senha FROM " . $this->table_name . " WHERE email = ? LIMIT 1";
+
+        // Prepara a query
+        $stmt = $this->conn->prepare($query);
+
+        if ($stmt === false) {
+            echo "Erro na preparação da query: " . $this->conn->error;
+            return false;
+        }
+
+        // Limpa os dados recebidos
+        $email = htmlspecialchars(strip_tags($email));
+
+        // Liga o parâmetro à query
+        $stmt->bind_param('s', $email);
+
+        // Executa a query
+        $stmt->execute();
+
+        // Armazena o resultado
+        $stmt->store_result();
+
+        // Verifica se encontrou algum usuário com o email fornecido
+        if ($stmt->num_rows > 0) {
+            // Liga as colunas do resultado aos atributos
+            $stmt->bind_result($this->nome_completo, $hashed_password);
+
+            // Recupera o resultado
+            $stmt->fetch();
+
+            // Verifica se a senha informada corresponde à senha criptografada armazenada
+            if (password_verify($senha, $hashed_password)) {
+                // Se a senha estiver correta, inicia uma sessão e armazena as informações do usuário
+                session_start();
+                $_SESSION['nome_completo'] = $this->nome_completo;
+                $_SESSION['email'] = $email;
+                return true;
+            } else {
+                // Senha incorreta
+                return false;
+            }
+        } else {
+            // Usuário não encontrado
+            return false;
+        }
+    }
 }
