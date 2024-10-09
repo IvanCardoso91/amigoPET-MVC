@@ -78,16 +78,18 @@ class UsuarioAdotante
         // Executa a query
         $stmt->execute();
 
-        // Armazena o resultado
-        $stmt->store_result();
+        // Obtém o resultado
+        $result = $stmt->get_result();
 
         // Verifica se encontrou algum usuário com o email fornecido
-        if ($stmt->num_rows > 0) {
+        if ($result->num_rows > 0) {
+
+            $row = $result->fetch_assoc();
+            $this->nome_completo = $row['nome_completo'];
+            $hashed_password = $row['senha'];
+
             // Liga as colunas do resultado aos atributos
             $stmt->bind_result($this->nome_completo, $hashed_password);
-
-            // Recupera o resultado
-            $stmt->fetch();
 
             // Verifica se a senha informada corresponde à senha criptografada armazenada
             if (password_verify($senha, $hashed_password)) {
