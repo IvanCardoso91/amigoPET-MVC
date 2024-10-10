@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cadastro ONG - Amigopet</title>
-    <link rel="stylesheet" href="../style/style-cadastro-ong.css" />
+    <link rel="stylesheet" href="./style/style-cadastro-ong.css" />
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Jomolhari&display=swap");
     </style>
@@ -12,8 +12,8 @@
 
   <body>
     <header>
-      <a href="../html/index.html">
-        <img src="../assets/logo-menor.svg" id="logo" alt="logo amigopet" />
+      <a href="../../index.php">
+        <img src="./assets/logo-menor.svg" id="logo" alt="logo amigopet" />
       </a>
     </header>
     <div class="frase">
@@ -22,97 +22,59 @@
     <div class="form-container">
       <div class="form">
         <h1 class="titulo-form">Cadastro ONG</h1>
-        <div class="caixa-input">
-          <div>
-            <input
-              type="email"
-              id="email-input"
-              name="email"
-              required
-              placeholder="Email da empresa"
-            />
+        <form action="../../cadastro-ong.php" method="POST">
+          <div class="caixa-input">
+            <div class="div-input">
+              <input
+                type="text"
+                id="nome_fantasia"
+                name="nome_fantasia"
+                required
+                placeholder="Nome fantasia"
+              />
+            </div>
+            <div>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                placeholder="Email da empresa"
+              />
+            </div>
+            <div class="div-input">
+              <input
+                type="tel"
+                id="telefone"
+                name="telefone"
+                placeholder="Numero para contato"
+                required
+              />
+            </div>
+            <div class="div-input">
+              <input
+                type="text"
+                id="cnpj"
+                name="cnpj"
+                required
+                placeholder="CNPJ"
+              />
+            </div>
+            <div class="div-input">
+              <input
+                type="password"
+                id="senha"
+                name="senha"
+                required
+                placeholder="Crie sua senha"
+              />
+            </div>
           </div>
           <div class="div-input">
-            <input
-              type="password"
-              id="senha-input"
-              name="senha"
-              required
-              placeholder="Crie sua senha"
-            />
+            <input type="submit" id="submit-button" value="Confirmar" />
           </div>
-          <div class="div-input">
-            <input
-              type="password"
-              id="senha-input"
-              name="confimar-senha"
-              required
-              placeholder="Confirme sua senha"
-            />
-          </div>
-          <div class="div-input">
-            <input
-              type="tel"
-              id="telefone-input"
-              name="phone"
-              placeholder="Numero para contato"
-              required
-            />
-          </div>
-          <div class="div-input">
-            <input
-              type="text"
-              id="nome-fantasia-input"
-              name="nome-fantasia"
-              required
-              placeholder="Nome fantasia"
-            />
-          </div>
-          <div class="div-input">
-            <input
-              type="number"
-              id="cpf-input"
-              name="cpf"
-              required
-              placeholder="CNPJ"
-            />
-          </div>
-        </div>
-        <div class="div-input">
-          <input type="submit" id="submit-button" value="Confirmar" />
-        </div>
+        </form>
       </div>
     </div>
-    <div id="myModal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <p>
-          Um código foi enviado ao e-mail informado para confirmar cadastro.
-        </p>
-      </div>
-    </div>
-    <script>
-      var modal = document.getElementById("myModal");
-
-      var span = document.getElementsByClassName("close")[0];
-
-      span.onclick = function () {
-        modal.style.display = "none";
-        window.location = "../html/index.html";
-      };
-
-      window.onclick = function (event) {
-        if (event.target == modal) {
-          modal.style.display = "none";
-          window.location = "../html/index.html";
-        }
-      };
-
-      document
-        .getElementById("submit-button")
-        .addEventListener("click", function (event) {
-          modal.style.display = "block";
-        });
-    </script>
   </body>
 </html>

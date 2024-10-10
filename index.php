@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -14,18 +18,32 @@
 <body>
     <div class="header">
         <div class="logo">
-            <img src="../assets/logo-maior.svg" alt="logo amigopet" />
+            <img src="./app/views/assets/logo-maior.svg" alt="logo amigopet" />
         </div>
         <div class="options">
             <a href="#servicos" id="servicos-options">Serviços</a>
             <a href="#sobre-nos" id="sobre-options">Sobre nós</a>
             <a href="#footer" id="contato-options">Contato</a>
+
+
+            <?php if (isset($_SESSION['user_type'])): ?>
+            <div class="user-info">
+                <?php if ($_SESSION['user_type'] === 'adotante'): ?>
+                <span>Olá, <?php echo htmlspecialchars($_SESSION['nome_completo']); ?>!</span>
+                <?php elseif ($_SESSION['user_type'] === 'ong'): ?>
+                <span>Olá, <?php echo htmlspecialchars($_SESSION['nome_fantasia']); ?>!</span>
+                <?php endif; ?>
+                <a href="logout.php" class="logout-btn">Logout</a>
+            </div>
+            <?php else: ?>
             <div class="login-header">
                 <a id="open-popup-login-btn">Entrar</a>
             </div>
             <div class="cadastro-header">
                 <a id="open-popup-sign-btn">Cadastre-se</a>
             </div>
+            <?php endif; ?>
+
         </div>
     </div>
 
@@ -37,8 +55,8 @@
             <span class="close-popup-btn" id="close-popup-login-btn">&times;</span>
             <h2>ATENÇÃO</h2>
             <p>Selecione o login desejado abaixo</p>
-            <a href="../html/login-usuario.html" class="close-btn">Login adotante</a>
-            <a href="../html/login-ong.html" class="close-btn">Login ONG</a>
+            <a href="./app/views/login-usuario.html" class="close-btn">Login adotante</a>
+            <a href="./app/views/login-ong.html" class="close-btn">Login ONG</a>
         </div>
     </div>
 
@@ -59,12 +77,12 @@
                 <a href="../html/login-usuario.html">Adote</a>
             </div>
         </div>
-        <div class="img-menu"><img src="../assets/img.menu.png" alt="" /></div>
+        <div class="img-menu"><img src="./app/views/assets/img.menu.png" alt="" /></div>
     </div>
 
     <section id="servicos" class="servicos">
         <div class="conteudo">
-            <img src="../assets/img.servicos.png" class="img-servicos" id="cachorro-servicos" />
+            <img src="./app/views/assets/img.servicos.png" class="img-servicos" id="cachorro-servicos" />
             <div class="titulo-servicos">
                 <h2>NOSSOS <br />SERVIÇOS</h2>
             </div>
@@ -110,7 +128,7 @@
 
     <section id="footer" class="footer">
         <div class="logo-footer">
-            <img src="../assets/logo-menor.svg" alt="" />
+            <img src="./app/views/assets/logo-menor.svg" alt="" />
             <div class="contato">
                 <h2>Contato</h2>
                 <p>EMAIL:amigopet@gmail.com</p>
