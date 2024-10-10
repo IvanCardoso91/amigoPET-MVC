@@ -5,6 +5,7 @@ class UsuarioAdotante
     private $table_name = "usuario_adotante"; // Nome da tabela
 
     // Propriedades do adotante (campos da tabela)
+    public $id;
     public $nome_completo;
     public $email;
     public $telefone;
@@ -59,7 +60,7 @@ class UsuarioAdotante
     public function login($email, $senha)
     {
         // Query para buscar o usuário pelo email
-        $query = "SELECT nome_completo, senha FROM " . $this->table_name . " WHERE email = ? LIMIT 1";
+        $query = "SELECT nome_completo, senha, id_usuario FROM " . $this->table_name . " WHERE email = ? LIMIT 1";
 
         // Prepara a query
         $stmt = $this->conn->prepare($query);
@@ -85,11 +86,12 @@ class UsuarioAdotante
         if ($result->num_rows > 0) {
 
             $row = $result->fetch_assoc();
+            $this->id = $row['id_usuario'];
             $this->nome_completo = $row['nome_completo'];
             $hashed_password = $row['senha'];
 
             // Liga as colunas do resultado aos atributos
-            $stmt->bind_result($this->nome_completo, $hashed_password);
+            $stmt->bind_result($this->nome_completo, $hashed_password, $this->id);
 
             // Verifica se a senha informada corresponde à senha criptografada armazenada
             if (password_verify($senha, $hashed_password)) {
@@ -100,6 +102,7 @@ class UsuarioAdotante
                 $_SESSION['user_type'] = 'adotante';
                 $_SESSION['nome_completo'] = $this->nome_completo;
                 $_SESSION['email'] = $email;
+                $_SESSION['id_usuario'] = $this->id;
                 return true;
             } else {
                 // Senha incorreta
@@ -107,6 +110,86 @@ class UsuarioAdotante
             }
         } else {
             // Usuário não encontrado
+            return false;
+        }
+    }
+
+    public function getUsuarioById($id)
+    {
+        $query = "SELECT nome_completo, email, telefone, cpf, data_nascimento FROM " . $this->table_name . " WHERE id_usuario = ? LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        if ($stmt === false) {
+            echo "Erro na preparação da query: " . $this->conn->error;
+            return false;
+        }
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc();
+        }
+        return false;
+    }
+
+    public function atualizarSenha($id, $senha_atual, $nova_senha)
+    {
+        // Primeiro, verificar se a senha atual está correta
+        $query = "SELECT senha FROM " . $this->table_name . " WHERE id_usuario = ? LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        if ($stmt === false) {
+            echo "Erro na preparação da query: " . $this->conn->error;
+            return false;
+        }
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows === 0) {
+            echo "Usuário não encontrado.";
+            return false;
+        }
+        $row = $result->fetch_assoc();
+        $hashed_password = $row['senha'];
+
+        if (!password_verify($senha_atual, $hashed_password)) {
+            echo "Senha atual incorreta.";
+            return false;
+        }
+
+        // Atualizar a senha
+        $nova_senha_hash = password_hash($nova_senha, PASSWORD_DEFAULT);
+        $query = "UPDATE " . $this->table_name . " SET senha = ? WHERE id_usuario = ?";
+        $stmt = $this->conn->prepare($query);
+        if ($stmt === false) {
+            echo "Erro na preparação da query: " . $this->conn->error;
+            return false;
+        }
+        $stmt->bind_param('si', $nova_senha_hash, $id);
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            echo "Erro ao executar a query: " . $stmt->error;
+            return false;
+        }
+    }
+
+    public function atualizarDados($id, $nome_completo, $email, $telefone)
+    {
+        $query = "UPDATE " . $this->table_name . " SET nome_completo = ?, email = ?, telefone = ? WHERE id_usuario = ?";
+        $stmt = $this->conn->prepare($query);
+        if ($stmt === false) {
+            echo "Erro na preparação da query: " . $this->conn->error;
+            return false;
+        }
+        // Limpa os dados
+        $nome_completo = htmlspecialchars(strip_tags($nome_completo));
+        $email = htmlspecialchars(strip_tags($email));
+        $telefone = htmlspecialchars(strip_tags($telefone));
+
+        $stmt->bind_param('sssi', $nome_completo, $email, $telefone, $id);
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            echo "Erro ao executar a query: " . $stmt->error;
             return false;
         }
     }

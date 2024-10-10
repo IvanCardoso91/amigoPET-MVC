@@ -8,7 +8,7 @@ session_start();
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./app//views/style/style-index.css" />
+    <link rel="stylesheet" href="./app/views/style/style-index.css" />
     <style>
     @import url("https://fonts.googleapis.com/css2?family=Jomolhari&display=swap");
     </style>
@@ -29,12 +29,18 @@ session_start();
             <?php if (isset($_SESSION['user_type'])): ?>
             <div class="user-info">
                 <?php if ($_SESSION['user_type'] === 'adotante'): ?>
-                <span>Olá, <?php echo htmlspecialchars($_SESSION['nome_completo']); ?>!</span>
+                <a href="./app/views/info-usuario.php">
+                    <span>
+                        Olá,
+                        <?php echo htmlspecialchars($_SESSION['nome_completo']); ?>!
+                    </span>
+                </a>
                 <?php elseif ($_SESSION['user_type'] === 'ong'): ?>
                 <span>Olá, <?php echo htmlspecialchars($_SESSION['nome_fantasia']); ?>!</span>
                 <?php endif; ?>
                 <a href="logout.php" class="logout-btn">Logout</a>
             </div>
+
             <?php else: ?>
             <div class="login-header">
                 <a id="open-popup-login-btn">Entrar</a>
