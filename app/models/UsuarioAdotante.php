@@ -193,4 +193,19 @@ class UsuarioAdotante
             return false;
         }
     }
+
+    public function getOngById($id)
+    {
+        $query = "SELECT * FROM " . $this->table_name . " WHERE id_ong = ?"; // Ajustado para id_ong
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param('i', $id); // Assuming id_ong is an integer
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc();
+        } else {
+            return false;
+        }
+    }
 }

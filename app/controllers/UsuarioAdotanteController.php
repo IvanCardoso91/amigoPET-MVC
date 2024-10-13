@@ -16,20 +16,24 @@ class UsuarioAdotanteController
 
     public function mostrarPagina()
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'adotante') {
             header("Location: ../html/index.php?error=nao_autenticado");
             exit();
         }
 
-        $id_usuario = $_SESSION['id_usuario'];
-        $dados_usuario = $this->usuarioAdotante->getUsuarioById($id_usuario);
+        $id_ong = $_SESSION['id_ong'];
+        $dados_ong = $this->usuarioAdotante->getOngById($id_ong);
 
-        if ($dados_usuario === false) {
-            echo "Erro ao buscar os dados do usuário.";
+        if ($dados_ong === false) {
+            echo "Erro ao buscar os dados da ONG.";
             exit();
         }
 
-        include __DIR__ . '../../views/info-usuario.php';
+        include __DIR__ . '../../views/info-ong.php';
     }
 
     public function cadastrar()
@@ -146,4 +150,5 @@ if (isset($_GET['action'])) {
             echo "Ação não reconhecida.";
             break;
     }
+
 }

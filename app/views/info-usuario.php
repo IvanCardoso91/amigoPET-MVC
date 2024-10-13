@@ -12,7 +12,7 @@ $cpf = htmlspecialchars($dados_usuario['cpf']);
 $data_nascimento = htmlspecialchars($dados_usuario['data_nascimento']);
 
 $mensagem_sucesso = '';
-$mensagem_erro = '';
+$mensagem_erro = '';    
 
 if (isset($_GET['success'])) {
   if ($_GET['success'] == 1) {
@@ -30,6 +30,7 @@ if (isset($_GET['error'])) {
   }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 

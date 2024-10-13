@@ -5,6 +5,7 @@ class UsuarioOng
     private $table_name = "usuario_ong"; // Nome da tabela
 
     // Propriedades da ONG (campos da tabela)
+    public $id;
     public $nome_fantasia;
     public $email;
     public $telefone;
@@ -55,7 +56,7 @@ class UsuarioOng
     public function login($cnpj, $email, $senha)
     {
         // Query para buscar o usuário pelo cnpj e email
-        $query = "SELECT nome_fantasia, email, senha FROM " . $this->table_name . " WHERE cnpj = ? AND email = ? LIMIT 1";
+        $query = "SELECT id_ong, nome_fantasia, email, senha FROM " . $this->table_name . " WHERE cnpj = ? AND email = ? LIMIT 1";
 
         // Prepara a query
         $stmt = $this->conn->prepare($query);
@@ -81,6 +82,7 @@ class UsuarioOng
         // Verifica se encontrou algum usuário com o cnpj e email fornecidos
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
+            $this->id = $row['id_ong']; // Armazena o ID da ONG
             $this->nome_fantasia = $row['nome_fantasia'];
             $hashed_password = $row['senha'];
 
@@ -92,6 +94,7 @@ class UsuarioOng
                     session_start();
                 }
                 $_SESSION['user_type'] = 'ong';
+                $_SESSION['id_ong'] = $this->id; // Armazena o ID na sessão
                 $_SESSION['nome_fantasia'] = $this->nome_fantasia;
                 $_SESSION['email'] = $email;
                 return true;
@@ -101,6 +104,84 @@ class UsuarioOng
             }
         } else {
             // Usuário não encontrado
+            return false;
+        }
+    }
+
+    public function atualizarSenha($id, $senha_atual, $nova_senha)
+    {
+        // Primeiro, verificar se a senha atual está correta
+        $query = "SELECT senha FROM " . $this->table_name . " WHERE id_ong = ? LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        if ($stmt === false) {
+            echo "Erro na preparação da query: " . $this->conn->error;
+            return false;
+        }
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows === 0) {
+            echo "Ong não encontrada.";
+            return false;
+        }
+        $row = $result->fetch_assoc();
+        $hashed_password = $row['senha'];
+
+        if (!password_verify($senha_atual, $hashed_password)) {
+            echo "Senha atual incorreta.";
+            return false;
+        }
+
+        // Atualizar a senha
+        $nova_senha_hash = password_hash($nova_senha, PASSWORD_DEFAULT);
+        $query = "UPDATE " . $this->table_name . " SET senha = ? WHERE id_ong = ?";
+        $stmt = $this->conn->prepare($query);
+        if ($stmt === false) {
+            echo "Erro na preparação da query: " . $this->conn->error;
+            return false;
+        }
+        $stmt->bind_param('si', $nova_senha_hash, $id);
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            echo "Erro ao executar a query: " . $stmt->error;
+            return false;
+        }
+    }
+
+    public function atualizarDados($id, $nome_fantasia, $email, $telefone)
+    {
+        $query = "UPDATE " . $this->table_name . " SET nome_fantasia = ?, email = ?, telefone = ? WHERE id_ong = ?";
+        $stmt = $this->conn->prepare($query);
+        if ($stmt === false) {
+            echo "Erro na preparação da query: " . $this->conn->error;
+            return false;
+        }
+        // Limpa os dados
+        $nome_fantasia = htmlspecialchars(strip_tags($nome_fantasia));
+        $email = htmlspecialchars(strip_tags($email));
+        $telefone = htmlspecialchars(strip_tags($telefone));
+
+        $stmt->bind_param('sssi', $nome_fantasia, $email, $telefone, $id);
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            echo "Erro ao executar a query: " . $stmt->error;
+            return false;
+        }
+    }
+
+    public function getOngById($id)
+    {
+        $query = "SELECT * FROM " . $this->table_name . " WHERE id_ong = ?"; // Ajustado para id_ong
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param('i', $id); // Assuming id_ong is an integer
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc();
+        } else {
             return false;
         }
     }
