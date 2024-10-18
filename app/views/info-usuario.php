@@ -1,10 +1,11 @@
 <?php
 // views/info-usuario.php
 if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'adotante') {
-  header("Location: index.php?error=nao_autenticado");
-  exit();
+    header("Location: index.php?error=nao_autenticado");
+    exit();
 }
 
+// $id_usuario = $_SESSION['id_usuario'];
 $nome_completo = htmlspecialchars($dados_usuario['nome_completo']);
 $email = htmlspecialchars($dados_usuario['email']);
 $telefone = htmlspecialchars($dados_usuario['telefone']);
@@ -12,22 +13,22 @@ $cpf = htmlspecialchars($dados_usuario['cpf']);
 $data_nascimento = htmlspecialchars($dados_usuario['data_nascimento']);
 
 $mensagem_sucesso = '';
-$mensagem_erro = '';    
+$mensagem_erro = '';
 
 if (isset($_GET['success'])) {
-  if ($_GET['success'] == 1) {
-    $mensagem_sucesso = "Dados atualizados com sucesso!";
-  } elseif ($_GET['success'] == 'senha') {
-    $mensagem_sucesso = "Senha atualizada com sucesso!";
-  }
+    if ($_GET['success'] == 1) {
+        $mensagem_sucesso = "Dados atualizados com sucesso!";
+    } elseif ($_GET['success'] == 'senha') {
+        $mensagem_sucesso = "Senha atualizada com sucesso!";
+    }
 }
 
 if (isset($_GET['error'])) {
-  if ($_GET['error'] == 1) {
-    $mensagem_erro = "Erro ao atualizar os dados.";
-  } elseif ($_GET['error'] == 'senha') {
-    $mensagem_erro = "Erro ao atualizar a senha. Verifique se a senha atual está correta.";
-  }
+    if ($_GET['error'] == 1) {
+        $mensagem_erro = "Erro ao atualizar os dados.";
+    } elseif ($_GET['error'] == 'senha') {
+        $mensagem_erro = "Erro ao atualizar a senha. Verifique se a senha atual está correta.";
+    }
 }
 ?>
 
@@ -40,7 +41,7 @@ if (isset($_GET['error'])) {
     <title>Info Usuário - Amigopet</title>
     <link rel="stylesheet" href="../views/style/style-info-usuario.css" />
     <style>
-    @import url("https://fonts.googleapis.com/css2?family=Jomolhari&display=swap");
+        @import url("https://fonts.googleapis.com/css2?family=Jomolhari&display=swap");
     </style>
 </head>
 
@@ -56,10 +57,10 @@ if (isset($_GET['error'])) {
         <div class="block">
             <h2>Informações do Usuário</h2>
             <?php if ($mensagem_sucesso): ?>
-            <div class="success-message"><?php echo $mensagem_sucesso; ?></div>
+                <div class="success-message"><?php echo $mensagem_sucesso; ?></div>
             <?php endif; ?>
             <?php if ($mensagem_erro): ?>
-            <div class="error-message"><?php echo $mensagem_erro; ?></div>
+                <div class="error-message"><?php echo $mensagem_erro; ?></div>
             <?php endif; ?>
             <div class="form-group">
                 <div>
@@ -150,31 +151,31 @@ if (isset($_GET['error'])) {
     </div>
 
     <script>
-    function openPasswordModal() {
-        document.getElementById("passwordModal").style.display = "flex";
-    }
+        function openPasswordModal() {
+            document.getElementById("passwordModal").style.display = "flex";
+        }
 
-    function closePasswordModal() {
-        document.getElementById("passwordModal").style.display = "none";
-    }
+        function closePasswordModal() {
+            document.getElementById("passwordModal").style.display = "none";
+        }
 
-    function openEditModal() {
-        document.getElementById("editModal").style.display = "flex";
-    }
+        function openEditModal() {
+            document.getElementById("editModal").style.display = "flex";
+        }
 
-    function closeEditModal() {
-        document.getElementById("editModal").style.display = "none";
-    }
+        function closeEditModal() {
+            document.getElementById("editModal").style.display = "none";
+        }
 
-    function showTab(tabIndex) {
-        document.querySelectorAll(".tab-content").forEach((tab) => {
-            tab.classList.remove("active");
-        });
-        document.getElementById(`tab${tabIndex}`).classList.add("active");
-    }
+        function showTab(tabIndex) {
+            document.querySelectorAll(".tab-content").forEach((tab) => {
+                tab.classList.remove("active");
+            });
+            document.getElementById(`tab${tabIndex}`).classList.add("active");
+        }
 
-    // Default to showing the first tab
-    showTab(1);
+        // Default to showing the first tab
+        showTab(1);
     </script>
 </body>
 

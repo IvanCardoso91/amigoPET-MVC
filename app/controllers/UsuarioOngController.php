@@ -26,7 +26,7 @@ class UsuarioOngController
         }
 
         $id_ong = $_SESSION['id_ong'];
-        $dados_ong = $this->usuarioOng->getOngById($id_ong);
+        $dados_ong = $this->usuarioOng->getUserById($id_ong);
 
         if ($dados_ong === false) {
             echo "Erro ao buscar os dados da ONG.";
@@ -45,9 +45,11 @@ class UsuarioOngController
             $this->usuarioOng->cnpj = $_POST['cnpj'];
             $this->usuarioOng->senha = $_POST['senha'];
 
+            // Verifica se deu tudo certo em cadastrar, se sim redireciona o usuário a uma página de sucesso
             if ($this->usuarioOng->cadastrar()) {
-                echo "Cadastro realizado com sucesso!";
-                require __DIR__ . '../../views/sucesso-cadastro-ong.html';
+                // Redireciona para a página de sucesso
+                header("Location: http://localhost/php/amigoPET-MVC/app/views/sucesso-cadastro.html?user-type=ong");
+                exit(); // Para garantir que o script pare de executar
             } else {
                 echo "Erro ao cadastrar!";
             }

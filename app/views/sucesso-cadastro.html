@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sucesso no Cadastro</title>
+    <script>
+      // Função para alterar a mensagem com base no tipo de usuário
+      function ajustarMensagem() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const userType = urlParams.get('user-type');
+
+        let mensagem = '';
+        if (userType === 'ong') {
+          mensagem = 'Cadastro de ONG realizado com sucesso!';
+        } else if (userType === 'adotante') {
+          mensagem = 'Seu cadastro como adotante foi realizado com sucesso!';
+        } else {
+          mensagem = 'Cadastro realizado com sucesso!';
+        }
+
+        document.getElementById('mensagem-sucesso').innerText = mensagem;
+      }
+
+      // Executa a função ao carregar a página
+      window.onload = ajustarMensagem;
+    </script>
+  </head>
+  <body>
+    <h2 id="mensagem-sucesso">Usuário cadastrado com sucesso!</h2>
+    <a href="/amigoPET-MVC/app/views/login-ong.html">Ir para o login</a>
+  </body>
+</html>

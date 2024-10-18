@@ -171,7 +171,7 @@ class UsuarioOng
         }
     }
 
-    public function getOngById($id)
+    public function getUserById($id)
     {
         $query = "SELECT * FROM " . $this->table_name . " WHERE id_ong = ?"; // Ajustado para id_ong
         $stmt = $this->conn->prepare($query);

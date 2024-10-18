@@ -25,37 +25,38 @@ class UsuarioAdotanteController
             exit();
         }
 
-        $id_ong = $_SESSION['id_ong'];
-        $dados_ong = $this->usuarioAdotante->getOngById($id_ong);
+        $id_usuario = $_SESSION['id_usuario'];
+        $dados_usuario = $this->usuarioAdotante->getUserById($id_usuario);
 
-        if ($dados_ong === false) {
-            echo "Erro ao buscar os dados da ONG.";
+        if ($dados_usuario === false) {
+            echo "Erro ao buscar os dados do adotante.";
             exit();
         }
 
-        include __DIR__ . '../../views/info-ong.php';
+        // Passa os dados para a view
+        include __DIR__ . '../../views/info-usuario.php';
     }
-
     public function cadastrar()
-    {
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+{
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-            $this->usuarioAdotante->nome_completo = $_POST['nome_completo'];
-            $this->usuarioAdotante->email = $_POST['email'];
-            $this->usuarioAdotante->telefone = $_POST['telefone'];
-            $this->usuarioAdotante->senha = $_POST['senha'];
-            $this->usuarioAdotante->cpf = $_POST['cpf'];
-            $this->usuarioAdotante->data_nascimento = $_POST['data_nascimento'];
+        $this->usuarioAdotante->nome_completo = $_POST['nome_completo'];
+        $this->usuarioAdotante->email = $_POST['email'];
+        $this->usuarioAdotante->telefone = $_POST['telefone'];
+        $this->usuarioAdotante->senha = $_POST['senha'];
+        $this->usuarioAdotante->cpf = $_POST['cpf'];
+        $this->usuarioAdotante->data_nascimento = $_POST['data_nascimento'];
 
-            // aqui ele verifica se deu tudo certo em cadastrar, se sim ele redirecionara o usuario a uma pagina de sucesso / se nao exibirá uma informação de erro (pode ser melhorado ambos os fluxos)
-            if ($this->usuarioAdotante->cadastrar()) {
-                echo "Cadastro realizado com sucesso!";
-                require __DIR__ . '../../views/sucesso-cadastro-usuario.html';
-            } else {
-                echo "Erro ao cadastrar!";
-            }
+        // Verifica se deu tudo certo em cadastrar, se sim redireciona o usuário a uma página de sucesso
+        if ($this->usuarioAdotante->cadastrar()) {
+            // Redireciona para a página de sucesso
+            header("Location: http://localhost/php/amigoPET-MVC/app/views/sucesso-cadastro.html?user-type=adotante");
+            exit(); // Para garantir que o script pare de executar
+        } else {
+            echo "Erro ao cadastrar!";
         }
     }
+}
 
     public function login()
     {

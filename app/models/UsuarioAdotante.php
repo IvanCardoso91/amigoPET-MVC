@@ -194,11 +194,11 @@ class UsuarioAdotante
         }
     }
 
-    public function getOngById($id)
+    public function getUserById($id)
     {
-        $query = "SELECT * FROM " . $this->table_name . " WHERE id_ong = ?"; // Ajustado para id_ong
+        $query = "SELECT * FROM " . $this->table_name . " WHERE id_usuario = ?"; // Ajustado para id_usuario
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param('i', $id); // Assuming id_ong is an integer
+        $stmt->bind_param('i', $id); // Assuming id_usuario is an integer
         $stmt->execute();
         $result = $stmt->get_result();
 

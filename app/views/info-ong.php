@@ -4,7 +4,7 @@ if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'ong') {
   header("Location: index.php?error=nao_autenticado");
   exit();
 }
-$id_ong = $_SESSION['id_ong'];
+// $id_ong = $_SESSION['id_ong'];
 $nome_fantasia = htmlspecialchars($dados_ong['nome_fantasia']);
 $email = htmlspecialchars($dados_ong['email']);
 $telefone = htmlspecialchars($dados_ong['telefone']);
@@ -122,8 +122,6 @@ if (isset($_GET['error'])) {
                 <input type="text" id="edit-telefone" name="telefone" value="<?php echo $telefone; ?>" required />
                 <label for="edit-name">Nome Fantasia:</label>
                 <input type="text" id="edit-name" name="nome_fantasia" value="<?php echo $nome_fantasia; ?>" required />
-                <label for="edit-cnpj">CNPJ:</label>
-                <input type="text" id="edit-cnpj" name="cnpj" value="<?php echo $cnpj; ?>" required />
                 <div class="buttons">
                     <button type="submit" class="button-blue">Confirmar</button>
                 </div>
