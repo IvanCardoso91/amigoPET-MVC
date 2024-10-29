@@ -23,3 +23,26 @@ CREATE TABLE usuario_ong (
     senha VARCHAR(255) NOT NULL,
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE tipo_animal (
+    id_tipo BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    descricao VARCHAR(50) NOT NULL
+);
+
+INSERT INTO tipo_animal (descricao) VALUES ('Cachorro'), ('Gato');
+
+CREATE TABLE animal (
+    id_animal INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_ong BIGINT(20) NOT NULL,
+    id_tipo BIGINT(20) NOT NULL,
+    raca VARCHAR(80) NOT NULL,
+    peso FLOAT(3,2) NOT NULL,
+    idade INT NOT NULL,
+    porte VARCHAR(7) NOT NULL,
+    sexo INT(1) NOT NULL,
+    descricao VARCHAR(255),
+);
+
+ALTER TABLE animal
+    ADD CONSTRAINT fk_ong FOREIGN KEY (id_ong) REFERENCES usuario_ong(id_ong) ON DELETE CASCADE,
+    ADD CONSTRAINT fk_tipo FOREIGN KEY (id_tipo) REFERENCES tipo_animal(id_tipo) ON DELETE CASCADE;

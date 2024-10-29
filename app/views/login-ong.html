@@ -20,7 +20,11 @@
       <h4>Empresas precisam ter um cadastro em nosso sistema</h4>
     </div>
     <div class="form-container">
-      <form action="../../login-ong.php" method="POST" class="form">
+      <form
+        action="../controllers/UsuarioOngController.php?action=login_ong"
+        method="POST"
+        class="form"
+      >
         <h1 class="login-titulo">Login Empresa</h1>
         <div class="div-input">
           <input
@@ -29,15 +33,6 @@
             name="cnpj"
             required
             placeholder="CNPJ"
-          />
-        </div>
-        <div class="div-input">
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            placeholder="Email"
           />
         </div>
         <div class="div-input">

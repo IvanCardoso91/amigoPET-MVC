@@ -174,3 +174,8 @@ header {
         flex-direction: column;
     }
 }
+
+.form-animal {
+    display: flex;
+    flex-direction: column;
+}
