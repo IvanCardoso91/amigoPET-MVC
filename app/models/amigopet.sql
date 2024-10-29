@@ -41,6 +41,7 @@ CREATE TABLE animal (
     porte VARCHAR(7) NOT NULL,
     sexo INT(1) NOT NULL,
     descricao VARCHAR(255),
+    imagem VARCHAR(255)
 );
 
 ALTER TABLE animal

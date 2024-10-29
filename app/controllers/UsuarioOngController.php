@@ -141,6 +141,9 @@ if (isset($_GET['action'])) {
         case 'atualizar_dados_ong':
             $controller->atualizarDadosUsuario();
             break;
+        case 'mostrar_pagina':
+            $controller->mostrarPagina($_SESSION['cnpj']);
+            break;
         default:
             echo "Ação não reconhecida.";
             break;

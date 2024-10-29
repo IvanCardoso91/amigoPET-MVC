@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 ?>
 
@@ -10,7 +11,7 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./app/views/style/style-index.css" />
     <style>
-        @import url("https://fonts.googleapis.com/css2?family=Jomolhari&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Jomolhari&display=swap");
     </style>
     <title>Amigopet</title>
 </head>
@@ -27,27 +28,32 @@ session_start();
 
 
             <?php if (isset($_SESSION['user_type'])): ?>
-                <div class="user-info">
-                    <?php if ($_SESSION['user_type'] === 'adotante'): ?>
-                        <a href="./app/controllers/UsuarioAdotanteController.php?action=mostrar_pagina">
-                            <span>
-                                Olá,
-                                <?php echo htmlspecialchars($_SESSION['nome_completo']); ?>!
-                            </span>
-                        </a>
-                    <?php elseif ($_SESSION['user_type'] === 'ong'): ?>
-                        <span>Olá, <?php echo htmlspecialchars($_SESSION['nome_fantasia']); ?>!</span>
-                    <?php endif; ?>
-                    <a href="logout.php" class="logout-btn">Logout</a>
-                </div>
+            <div class="user-info">
+                <?php if ($_SESSION['user_type'] === 'adotante'): ?>
+                <a href="./app/controllers/UsuarioAdotanteController.php?action=mostrar_pagina">
+                    <span>
+                        Olá,
+                        <?php echo htmlspecialchars($_SESSION['nome_completo']); ?>!
+                    </span>
+                </a>
+                <?php elseif ($_SESSION['user_type'] === 'ong'): ?>
+                <a href="./app/controllers/UsuarioOngController.php?action=mostrar_pagina">
+                    <span>
+                        Olá,
+                        <?php echo htmlspecialchars($_SESSION['nome_fantasia']); ?>!
+                    </span>
+                </a>
+                <?php endif; ?>
+                <a href="logout.php" class="logout-btn">Logout</a>
+            </div>
 
             <?php else: ?>
-                <div class="login-header">
-                    <a id="open-popup-login-btn">Entrar</a>
-                </div>
-                <div class="cadastro-header">
-                    <a id="open-popup-sign-btn">Cadastre-se</a>
-                </div>
+            <div class="login-header">
+                <a id="open-popup-login-btn">Entrar</a>
+            </div>
+            <div class="cadastro-header">
+                <a id="open-popup-sign-btn">Cadastre-se</a>
+            </div>
             <?php endif; ?>
 
         </div>
@@ -80,7 +86,7 @@ session_start();
         <div class="conteudo-menu">
             <h1 id="adote-ja">Adote já o seu novo <br />companheiro!</h1>
             <div class="adote-menu">
-                <a href="../html/login-usuario.html">Adote</a>
+                <a href="./app/views/listagem.php">Adote</a>
             </div>
         </div>
         <div class="img-menu"><img src="./app/views/assets/img.menu.png" alt="" /></div>
@@ -145,51 +151,51 @@ session_start();
     </section>
 
     <script>
-        function openPopup(popupId) {
-            const popup = document.getElementById(popupId);
-            const popupBg = document.getElementById("popup-bg");
-            popup.classList.add("show");
-            popupBg.classList.add("show");
-        }
+    function openPopup(popupId) {
+        const popup = document.getElementById(popupId);
+        const popupBg = document.getElementById("popup-bg");
+        popup.classList.add("show");
+        popupBg.classList.add("show");
+    }
 
-        function closePopups() {
-            const popups = document.querySelectorAll(".popup");
-            const popupBg = document.getElementById("popup-bg");
-            popups.forEach((popup) => {
-                popup.classList.remove("show");
-            });
-            popupBg.classList.remove("show");
-        }
+    function closePopups() {
+        const popups = document.querySelectorAll(".popup");
+        const popupBg = document.getElementById("popup-bg");
+        popups.forEach((popup) => {
+            popup.classList.remove("show");
+        });
+        popupBg.classList.remove("show");
+    }
 
-        // Adicionar eventos para abrir pop-ups
-        document
-            .getElementById("open-popup-login-btn")
-            .addEventListener("click", function() {
-                openPopup("popup-login");
-            });
-
-        document
-            .getElementById("open-popup-sign-btn")
-            .addEventListener("click", function() {
-                openPopup("popup-sign");
-            });
-
-        // Adicionar evento para fechar pop-ups ao clicar fora do conteúdo
-        window.addEventListener("click", function(event) {
-            const popups = document.querySelectorAll(".popup");
-            const popupBg = document.getElementById("popup-bg");
-            if (event.target === popupBg) {
-                closePopups();
-            }
+    // Adicionar eventos para abrir pop-ups
+    document
+        .getElementById("open-popup-login-btn")
+        .addEventListener("click", function() {
+            openPopup("popup-login");
         });
 
-        // Adicionar eventos para fechar pop-ups ao clicar no botão de fechar
-        document
-            .getElementById("close-popup-login-btn")
-            .addEventListener("click", closePopups);
-        document
-            .getElementById("close-popup-sign-btn")
-            .addEventListener("click", closePopups);
+    document
+        .getElementById("open-popup-sign-btn")
+        .addEventListener("click", function() {
+            openPopup("popup-sign");
+        });
+
+    // Adicionar evento para fechar pop-ups ao clicar fora do conteúdo
+    window.addEventListener("click", function(event) {
+        const popups = document.querySelectorAll(".popup");
+        const popupBg = document.getElementById("popup-bg");
+        if (event.target === popupBg) {
+            closePopups();
+        }
+    });
+
+    // Adicionar eventos para fechar pop-ups ao clicar no botão de fechar
+    document
+        .getElementById("close-popup-login-btn")
+        .addEventListener("click", closePopups);
+    document
+        .getElementById("close-popup-sign-btn")
+        .addEventListener("click", closePopups);
     </script>
 </body>
 

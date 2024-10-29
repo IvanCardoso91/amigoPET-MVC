@@ -14,7 +14,7 @@ class UsuarioAdotanteController
         $this->usuarioAdotante = new UsuarioAdotante($this->db);
     }
 
-    public function mostrarPagina()
+    public function mostrarPagina($id_usuario)
     {
         if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'adotante') {
             header("Location: ../html/index.php?error=nao_autenticado");
@@ -29,7 +29,8 @@ class UsuarioAdotanteController
             exit();
         }
 
-        include __DIR__ . '../../views/info-usuario.php';
+        header("Location: ../views/info-usuario.php?id=" . $id_usuario);
+        exit();
     }
 
     public function cadastrar()
@@ -65,7 +66,7 @@ class UsuarioAdotanteController
             if ($this->usuarioAdotante->login($email, $senha)) {
                 echo "Login realizado com sucesso!";
                 // Redirecionar para a página inicial ou painel
-                $this->mostrarPagina();
+                $this->mostrarPagina($_SESSION['id_usuario']);
                 exit();
             } else {
                 echo "Email ou senha incorretos!";
@@ -91,7 +92,7 @@ class UsuarioAdotanteController
 
             if ($this->usuarioAdotante->atualizarSenha($id_usuario, $senha_atual, $nova_senha)) {
                 echo "Senha alterada com sucesso";
-                $this->mostrarPagina();
+                $this->mostrarPagina($_SESSION['id_usuario']);
             } else {
                 echo "não foi possivel alterar a senha";
             }
@@ -116,7 +117,7 @@ class UsuarioAdotanteController
                 $_SESSION['nome_completo'] = $nome_completo;
                 $_SESSION['email'] = $email;
                 echo "Dados alterados com sucesso";
-                $this->mostrarPagina();
+                $this->mostrarPagina($_SESSION['id_usuario']);
             } else {
                 echo "não foi possivel alterar os dados";
             }
@@ -140,7 +141,7 @@ if (isset($_GET['action'])) {
             $controller->atualizarDadosUsuario();
             break;
         case 'mostrar_pagina':
-            $controller->mostrarPagina();
+            $controller->mostrarPagina($_SESSION['id_usuario']);
             break;
         default:
             echo "Ação não reconhecida.";

@@ -14,6 +14,7 @@ class Animal
     public $porte;     // Porte do animal
     public $sexo;      // Sexo do animal
     public $descricao; // Descrição do animal
+    public $imagem; // imagem do animal
 
     // Construtor para conectar ao banco de dados
     public function __construct($db)
@@ -26,15 +27,15 @@ class Animal
     {
         // Query de inserção
         $query = "INSERT INTO " . $this->table_name . " 
-                  (id_ong, id_tipo, raca, peso, idade, porte, sexo, descricao) 
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+              (id_ong, id_tipo, raca, peso, idade, porte, sexo, descricao, imagem) 
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         // Prepara a query
         $stmt = $this->conn->prepare($query);
 
         // Verifica se a preparação da query foi bem-sucedida
         if ($stmt === false) {
-            echo "Erro na preparação da query: " . $this->conn->error; // Usando mysqli_error()
+            echo "Erro na preparação da query: " . $this->conn->error;
             return false;
         }
 
@@ -47,15 +48,27 @@ class Animal
         $this->porte = htmlspecialchars(strip_tags($this->porte));
         $this->sexo = htmlspecialchars(strip_tags($this->sexo));
         $this->descricao = htmlspecialchars(strip_tags($this->descricao));
+        $this->imagem = htmlspecialchars(strip_tags($this->imagem));
 
         // Liga os parâmetros aos valores vindos do formulário
-        $stmt->bind_param('iisissss', $this->id_ong, $this->id_tipo, $this->raca, $this->peso, $this->idade, $this->porte, $this->sexo, $this->descricao);
+        $stmt->bind_param(
+            'iisisssss',
+            $this->id_ong,
+            $this->id_tipo,
+            $this->raca,
+            $this->peso,
+            $this->idade,
+            $this->porte,
+            $this->sexo,
+            $this->descricao,
+            $this->imagem
+        );
 
         // Executa a query
         if ($stmt->execute()) {
             return true;
         } else {
-            echo "Erro ao executar a query: " . $stmt->error; // Usando mysqli_stmt_error()
+            echo "Erro ao executar a query: " . $stmt->error;
             return false;
         }
     }
@@ -74,5 +87,21 @@ class Animal
         }
 
         return $animais;
+    }
+
+    public function buscarTodosAnimais()
+    {
+        $query = "SELECT * FROM " . $this->table_name;
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Retorna os dados dos animais como um array
+        $todosAnimais = [];
+        while ($row = $result->fetch_assoc()) {
+            $todosAnimais[] = $row;
+        }
+
+        return $todosAnimais;
     }
 }

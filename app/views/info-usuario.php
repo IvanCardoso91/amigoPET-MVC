@@ -1,4 +1,6 @@
 <?php
+ob_start();
+session_start();
 // views/info-usuario.php
 if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'adotante') {
   header("Location: index.php?error=nao_autenticado");
