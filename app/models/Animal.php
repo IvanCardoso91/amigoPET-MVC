@@ -16,30 +16,24 @@ class Animal
     public $descricao; // Descrição do animal
     public $imagem; // imagem do animal
 
-    // Construtor para conectar ao banco de dados
     public function __construct($db)
     {
         $this->conn = $db;
     }
 
-    // Método para cadastrar um novo animal
     public function cadastrar()
     {
-        // Query de inserção
         $query = "INSERT INTO " . $this->table_name . " 
               (id_ong, id_tipo, raca, peso, idade, porte, sexo, descricao, imagem) 
               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        // Prepara a query
         $stmt = $this->conn->prepare($query);
 
-        // Verifica se a preparação da query foi bem-sucedida
         if ($stmt === false) {
             echo "Erro na preparação da query: " . $this->conn->error;
             return false;
         }
 
-        // Limpa os dados para evitar problemas de segurança
         $this->id_ong = htmlspecialchars(strip_tags($this->id_ong));
         $this->id_tipo = htmlspecialchars(strip_tags($this->id_tipo));
         $this->raca = htmlspecialchars(strip_tags($this->raca));
@@ -50,7 +44,6 @@ class Animal
         $this->descricao = htmlspecialchars(strip_tags($this->descricao));
         $this->imagem = htmlspecialchars(strip_tags($this->imagem));
 
-        // Liga os parâmetros aos valores vindos do formulário
         $stmt->bind_param(
             'iisisssss',
             $this->id_ong,
@@ -64,7 +57,6 @@ class Animal
             $this->imagem
         );
 
-        // Executa a query
         if ($stmt->execute()) {
             return true;
         } else {
@@ -103,5 +95,69 @@ class Animal
         }
 
         return $todosAnimais;
+    }
+
+    public function editarAnimal()
+    {
+        $query = "UPDATE " . $this->table_name . " 
+                  SET id_tipo = ?, raca = ?, peso = ?, idade = ?, porte = ?, sexo = ?, descricao = ?, imagem = ?
+                  WHERE id_animal = ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        if ($stmt === false) {
+            echo "Erro na preparação da query: " . $this->conn->error;
+            return false;
+        }
+
+        $this->id_tipo = htmlspecialchars(strip_tags($this->id_tipo));
+        $this->raca = htmlspecialchars(strip_tags($this->raca));
+        $this->peso = htmlspecialchars(strip_tags($this->peso));
+        $this->idade = htmlspecialchars(strip_tags($this->idade));
+        $this->porte = htmlspecialchars(strip_tags($this->porte));
+        $this->sexo = htmlspecialchars(strip_tags($this->sexo));
+        $this->descricao = htmlspecialchars(strip_tags($this->descricao));
+        $this->imagem = htmlspecialchars(strip_tags($this->imagem));
+        $this->id_animal = htmlspecialchars(strip_tags($this->id_animal));
+
+        $stmt->bind_param(
+            'ississssi',
+            $this->id_tipo,
+            $this->raca,
+            $this->peso,
+            $this->idade,
+            $this->porte,
+            $this->sexo,
+            $this->descricao,
+            $this->imagem,
+            $this->id_animal
+        );
+
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            echo "Erro ao executar a query: " . $stmt->error;
+            return false;
+        }
+    }
+
+    public function deletarAnimal($id_animal)
+    {
+        $query = "DELETE FROM " . $this->table_name . " WHERE id_animal = ?";
+        $stmt = $this->conn->prepare($query);
+
+        if ($stmt === false) {
+            echo "Erro na preparação da query: " . $this->conn->error;
+            return false;
+        }
+
+        $stmt->bind_param('i', $id_animal);
+
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            echo "Erro ao executar a query: " . $stmt->error;
+            return false;
+        }
     }
 }

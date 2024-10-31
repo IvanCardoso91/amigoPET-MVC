@@ -1,6 +1,5 @@
 <?php
 ob_start();
-session_start();
 // views/info-usuario.php
 if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'ong') {
     header("Location: index.php?error=nao_autenticado");
@@ -44,7 +43,7 @@ if (isset($_GET['error'])) {
     <title>Info Ong - Amigopet</title>
     <link rel="stylesheet" href="../views/style/style-info-ong.css" />
     <style>
-    @import url("https://fonts.googleapis.com/css2?family=Jomolhari&display=swap");
+        @import url("https://fonts.googleapis.com/css2?family=Jomolhari&display=swap");
     </style>
 </head>
 
@@ -60,10 +59,10 @@ if (isset($_GET['error'])) {
         <div class="block">
             <h2>Informações da Ong</h2>
             <?php if ($mensagem_sucesso): ?>
-            <div class="success-message"><?php echo $mensagem_sucesso; ?></div>
+                <div class="success-message"><?php echo $mensagem_sucesso; ?></div>
             <?php endif; ?>
             <?php if ($mensagem_erro): ?>
-            <div class="error-message"><?php echo $mensagem_erro; ?></div>
+                <div class="error-message"><?php echo $mensagem_erro; ?></div>
             <?php endif; ?>
             <div class="form-group">
                 <div>
@@ -88,10 +87,10 @@ if (isset($_GET['error'])) {
                 </div>
             </div>
             <div class="buttons">
-                <button class="button-blue" onclick="openPasswordModal()">
+                <button class="button-blue" onclick="openModal('passwordModal')">
                     Redefinir sua Senha
                 </button>
-                <button class="button-yellow" onclick="openEditModal()">
+                <button class="button-yellow" onclick="openModal('editModal')">
                     Deseja editar seus dados?
                 </button>
             </div>
@@ -156,22 +155,27 @@ if (isset($_GET['error'])) {
                 </thead>
                 <tbody>
                     <?php if (!empty($animais)): ?>
-                    <?php foreach ($animais as $animal): ?>
-                    <tr>
-                        <td><?php echo $animal['id_animal']; ?></td>
-                        <td><?php echo $animal['id_tipo'] == 1 ? 'Cachorro' : 'Gato'; ?></td>
-                        <td><?php echo $animal['raca']; ?></td>
-                        <td><?php echo $animal['peso']; ?></td>
-                        <td><?php echo $animal['idade']; ?></td>
-                        <td><?php echo ucfirst($animal['porte']); ?></td>
-                        <td><?php echo $animal['sexo'] == 1 ? 'Macho' : 'Fêmea'; ?></td>
-                        <td><?php echo $animal['descricao']; ?></td>
-                    </tr>
-                    <?php endforeach; ?>
+                        <?php foreach ($animais as $animal): ?>
+                            <tr>
+                                <td><?php echo $animal['id_animal']; ?></td>
+                                <td><?php echo $animal['id_tipo'] == 1 ? 'Cachorro' : 'Gato'; ?></td>
+                                <td><?php echo $animal['raca']; ?></td>
+                                <td><?php echo $animal['peso']; ?></td>
+                                <td><?php echo $animal['idade']; ?></td>
+                                <td><?php echo ucfirst($animal['porte']); ?></td>
+                                <td><?php echo $animal['sexo'] == 1 ? 'Macho' : 'Fêmea'; ?></td>
+                                <td><?php echo $animal['descricao']; ?></td>
+                                <td>
+                                    <a href="#"
+                                        onclick="openModalEditAnimal(<?php echo htmlspecialchars(json_encode($animal)); ?>)">Editar</a>
+                                    <a href="#" onclick="openModalDeleteAnimal(<?php echo $animal['id_animal']; ?>)">Deletar</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     <?php else: ?>
-                    <tr>
-                        <td colspan="8">Nenhum animal cadastrado.</td>
-                    </tr>
+                        <tr>
+                            <td colspan="9">Nenhum animal cadastrado.</td>
+                        </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
@@ -181,7 +185,7 @@ if (isset($_GET['error'])) {
     <!-- Modals -->
     <div id="passwordModal" class="modal">
         <div class="modal-content">
-            <button class="close" onclick="closePasswordModal()">×</button>
+            <button class="close" onclick="closeModal('passwordModal')">×</button>
             <h3>Redefinir Senha</h3>
             <form action="../../app/controllers/UsuarioOngController.php?action=atualizar_senha_ong" method="POST">
                 <label for="current-password">Senha Atual:</label>
@@ -197,7 +201,7 @@ if (isset($_GET['error'])) {
 
     <div id="editModal" class="modal">
         <div class="modal-content">
-            <button class="close" onclick="closeEditModal()">×</button>
+            <button class="close" onclick="closeModal('editModal')">×</button>
             <h3>Editar Informações do Usuário</h3>
             <form action="../../app/controllers/UsuarioOngController.php?action=atualizar_dados_ong" method="POST">
                 <label for="edit-email">E-mail do Usuário:</label>
@@ -213,32 +217,75 @@ if (isset($_GET['error'])) {
         </div>
     </div>
 
+    <div id="animalEditModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('animalEditModal')">&times;</span>
+            <h2>Editar Animal</h2>
+            <form action="../../app/controllers/AnimalController.php?action=editar_animal" id="editarForm" method="POST"
+                enctype="multipart/form-data">
+                <input type="hidden" id="id_animal" name="id_animal">
+                <label for="raca">Raça:</label>
+                <input type="text" id="raca" name="raca" required>
+                <label for="peso">Peso:</label>
+                <input type="text" id="peso" name="peso" required>
+                <label for="idade">Idade:</label>
+                <input type="text" id="idade" name="idade" required>
+                <label for="porte">Porte:</label>
+                <input type="text" id="porte" name="porte" required>
+                <label for="sexo">Sexo:</label>
+                <select id="sexo" name="sexo">
+                    <option value="1">Macho</option>
+                    <option value="2">Fêmea</option>
+                </select>
+                <label for="descricao">Descrição:</label>
+                <textarea id="descricao" name="descricao" required></textarea>
+                <label for="imagem">Imagem:</label>
+                <input type="file" id="imagem" name="imagem">
+                <input type="hidden" id="imagem_atual" name="imagem_atual">
+                <button type="submit">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="animalDeletModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('deleteModal')">&times;</span>
+            <h2>Deletar Animal</h2>
+            <form action="../../app/controllers/AnimalController.php?action=deletar_animal" method="POST">
+                <input type="hidden" id="deleteId" name="id_animal">
+                <p>Tem certeza que deseja deletar este animal?</p>
+                <button type="submit">Deletar</button>
+            </form>
+        </div>
+    </div>
+
     <script>
-    function openPasswordModal() {
-        document.getElementById("passwordModal").style.display = "flex";
-    }
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "flex";
+        }
 
-    function closePasswordModal() {
-        document.getElementById("passwordModal").style.display = "none";
-    }
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
 
-    function openEditModal() {
-        document.getElementById("editModal").style.display = "flex";
-    }
+        function openModalDeleteAnimal(idAnimal) {
+            document.getElementById("deleteId").value = idAnimal;
 
-    function closeEditModal() {
-        document.getElementById("editModal").style.display = "none";
-    }
+            openModal('animalDeletModal');
+        }
 
-    function showTab(tabIndex) {
-        document.querySelectorAll(".tab-content").forEach((tab) => {
-            tab.classList.remove("active");
-        });
-        document.getElementById(`tab${tabIndex}`).classList.add("active");
-    }
+        function openModalEditAnimal(animal) {
+            console.log("animal", animal)
+            document.getElementById("id_animal").value = animal.id_animal;
+            document.getElementById("raca").value = animal.raca;
+            document.getElementById("peso").value = animal.peso;
+            document.getElementById("idade").value = animal.idade;
+            document.getElementById("porte").value = animal.porte;
+            document.getElementById("sexo").value = animal.sexo;
+            document.getElementById("descricao").value = animal.descricao;
 
-    // Default to showing the first tab
-    showTab(1);
+            openModal('animalEditModal');
+        }
     </script>
 </body>
 

@@ -88,6 +88,53 @@ class AnimalController
             }
         }
     }
+
+    public function editarAnimal()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->animal->id_animal = $_POST['id_animal'];
+            $this->animal->id_tipo = $_POST['id_tipo'];
+            $this->animal->raca = $_POST['raca'];
+            $this->animal->peso = $_POST['peso'];
+            $this->animal->idade = $_POST['idade'];
+            $this->animal->porte = $_POST['porte'];
+            $this->animal->sexo = $_POST['sexo'];
+            $this->animal->descricao = $_POST['descricao'];
+
+            // Verifica se foi feito upload de nova imagem
+            if (isset($_FILES['imagem']) && $_FILES['imagem']['size'] > 0) {
+                $imagem = $_FILES['imagem'];
+                $extensao = strtolower(pathinfo($imagem['name'], PATHINFO_EXTENSION));
+                $novoNome = uniqid() . ($extensao === 'jfif' ? '.jpg' : '.' . $extensao);
+                $caminhoDestino = '../views/assets/' . basename($novoNome);
+                if (move_uploaded_file($imagem['tmp_name'], $caminhoDestino)) {
+                    $this->animal->imagem = 'assets/' . basename($novoNome);
+                } else {
+                    echo "Erro ao carregar a imagem.";
+                    return;
+                }
+            } else {
+                // Manter a imagem atual
+                $this->animal->imagem = $_POST['imagem_atual'];
+            }
+
+            if ($this->animal->editarAnimal()) {
+                echo "Animal atualizado com sucesso!";
+            } else {
+                echo "Erro ao atualizar o animal.";
+            }
+        }
+    }
+
+    public function deletarAnimal($id_animal)
+    {
+        if ($this->animal->deletarAnimal($id_animal)) {
+            echo "Animal deletado com sucesso!";
+            $this->mostrarPagina();
+        } else {
+            echo "Erro ao deletar o animal.";
+        }
+    }
 }
 
 if (isset($_GET['action'])) {
@@ -98,6 +145,12 @@ if (isset($_GET['action'])) {
             break;
         case 'exibir_todos_animais':
             $controller->mostrarTodosAnimais();
+            break;
+        case 'editar_animal':
+            $controller->editarAnimal();
+            break;
+        case 'deletar_animal':
+            $controller->deletarAnimal($_POST['id_animal']);
             break;
         default:
             echo "Ação não reconhecida.";
