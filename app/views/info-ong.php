@@ -1,16 +1,10 @@
 <?php
 ob_start();
 session_start();
-require_once __DIR__ . '../../controllers/ConversaController.php';
 
 if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'ong') {
     header("Location: index.php?error=nao_autenticado");
     exit();
-}
-
-if (!isset($_SESSION['todas_mensagens'])) {
-    $controller = new ConversaController();
-    $controller->mostrarTodasMensagens('id_ong');
 }
 
 $id_ong = $_SESSION['id_ong'] ?? null;
@@ -53,6 +47,20 @@ if (isset($_GET['error'])) {
     <link rel="stylesheet" href="../views/style/style-info-ong.css" />
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Jomolhari&display=swap");
+
+        .adotante-message {
+            background-color: #e8f9fd;
+            border-left: 4px solid #007bff;
+            padding: 10px;
+            margin: 5px 0;
+        }
+
+        .ong-message {
+            background-color: #f9e9e9;
+            border-left: 4px solid #28a745;
+            padding: 10px;
+            margin: 5px 0;
+        }
     </style>
 </head>
 
@@ -74,6 +82,7 @@ if (isset($_GET['error'])) {
                 <div class="error-message"><?php echo $mensagem_erro; ?></div>
             <?php endif; ?>
             <div class="form-group">
+                <input type="hidden" id="idOng" name="id_ong" value="<?php echo $id_ong; ?>">
                 <div>
                     <label>CNPJ:</label>
                     <span><?php echo $cnpj; ?></span>
@@ -147,36 +156,27 @@ if (isset($_GET['error'])) {
                 <button type="submit">Cadastrar Animal</button>
             </form>
         </div>
-        <div class="container">
-            <h2>Mensagens dos Adotantes</h2>
-            <div class="tabs">
+        <div class="chat-container">
+            <div class="chat-messages" id="areaDeMensagens">
                 <?php foreach ($mensagens as $mensagem): ?>
-                    <button onclick="showTab(<?php echo $mensagem['id_adotante']; ?>)">
-                        <?php echo htmlspecialchars($mensagem['nome_adotante']); ?> -
-                        <?php echo htmlspecialchars($mensagem['nome_animal']); ?>
-                    </button>
+                    <div class="<?php echo $mensagem['enviado_por'] == 'adotante' ? 'adotante-message' : 'ong-message'; ?>">
+                        <strong><?php echo $mensagem['enviado_por'] == 'adotante' ? 'Adotante' : 'Você'; ?>:</strong>
+                        <?php echo htmlspecialchars($mensagem['mensagem']); ?>
+                        <small> Enviado em: <?php echo $mensagem['data_envio']; ?></small>
+                    </div>
                 <?php endforeach; ?>
             </div>
 
-            <?php foreach ($mensagens as $mensagem): ?>
-                <div id="tab<?php echo $mensagem['id_adotante']; ?>" class="tab-content">
-                    <p>Adotante: <?php echo htmlspecialchars($mensagem['nome_adotante']); ?></p>
-                    <p>Animal: <?php echo htmlspecialchars($mensagem['nome_animal']); ?></p>
-                    <p><strong><?php echo $mensagem['enviado_por'] == 'adotante' ? 'Adotante' : 'Você'; ?>:</strong>
-                        <?php echo htmlspecialchars($mensagem['mensagem']); ?></p>
-                    <p><small>Enviado em: <?php echo $mensagem['data_envio']; ?></small></p>
-
-                    <!-- Formulário para a ONG enviar nova mensagem -->
-                    <form method="POST" action="../controllers/ConversaController.php?action=envia_mensagem_ong">
-                        <input type="hidden" name="id_ong" value="<?php echo $id_ong; ?>">
-                        <input type="hidden" name="id_adotante" value="<?php echo $mensagem['id_adotante']; ?>">
-                        <input type="hidden" name="id_animal" value="<?php echo $mensagem['id_animal']; ?>">
-                        <input type="text" name="mensagem" placeholder="Digite sua mensagem">
-                        <button type="submit">Enviar</button>
-                    </form>
-                </div>
-            <?php endforeach; ?>
+            <!-- Formulário de resposta -->
+            <form id="replyForm" class="message-form">
+                <input type="hidden" name="id_ong" value="<?php echo $id_ong; ?>">
+                <input type="hidden" name="id_adotante" value="<?php echo $mensagem['id_adotante']; ?>">
+                <input type="hidden" name="id_animal" value="<?php echo $mensagem['id_animal']; ?>">
+                <textarea name="mensagem" placeholder="Digite sua mensagem" required></textarea>
+                <button type="submit">Enviar</button>
+            </form>
         </div>
+
         <div class="block animais-cadastrados">
             <h2>Animais Cadastrados</h2>
             <table>
@@ -321,6 +321,57 @@ if (isset($_GET['error'])) {
 
             openModal('animalEditModal');
         }
+
+        function fetchData() {
+            const idOng = document.getElementById('idOng').value
+
+            fetch('../controllers/ConversaController.php?action=mostrar_todas_mensagens_ong', {
+                    method: 'POST', // Como você está enviando dados, o método deve ser POST
+                    headers: {
+                        'Content-Type': 'application/json' // Especifica que o corpo da requisição será JSON
+                    },
+                    body: JSON.stringify({
+                        id_ong: idOng
+                    }) // Converte o objeto JavaScript em JSON
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("data", data);
+                })
+                .catch(error => console.error('Erro ao buscar dados:', error));
+        }
+
+        window.onload = fetchData;
+
+        const forms = document.querySelectorAll('.message-form');
+
+        forms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault(); // Impede o envio padrão do formulário
+
+                const formData = new FormData(form);
+                fetch('../controllers/ConversaController.php?action=envia_mensagem_ong', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const messageDiv = document.createElement('div');
+                            messageDiv.className = 'ong-message';
+                            messageDiv.innerHTML =
+                                `<strong>Você:</strong> ${data.data.mensagem} <small>Enviado em: ${data.data.data_envio}</small>`;
+
+                            document.querySelector('.chat-messages').appendChild(messageDiv);
+
+                            form.querySelector('textarea').value = '';
+                        } else {
+                            console.error(data.message);
+                        }
+                    })
+                    .catch(error => console.error('There was a problem with your fetch operation:', error));
+            });
+        });
     </script>
 </body>
 

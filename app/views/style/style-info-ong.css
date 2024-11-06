@@ -179,3 +179,21 @@ header {
     display: flex;
     flex-direction: column;
 }
+
+.adotante-message {
+    background-color: #e8f9fd;
+    /* Azul claro para mensagens do adotante */
+    border-left: 4px solid #007bff;
+    /* Borda azul */
+    padding: 10px;
+    margin: 5px 0;
+}
+
+.ong-message {
+    background-color: #f9e9e9;
+    /* Cinza claro para mensagens da ONG */
+    border-left: 4px solid #28a745;
+    /* Borda verde */
+    padding: 10px;
+    margin: 5px 0;
+}

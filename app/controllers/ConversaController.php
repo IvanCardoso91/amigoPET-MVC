@@ -55,35 +55,109 @@ class ConversaController
             $id_animal = $_POST['id_animal'];
             $mensagem = $_POST['mensagem'];
 
+            // Enviando mensagem
             if ($this->conversa->enviarMensagemOng($id_usuario, $id_animal, $id_ong, $mensagem)) {
-                header("Location: ../views/info-ong.php?mensagem=sucesso");
+                // Retorne os dados da mensagem enviada
+                echo json_encode([
+                    'success' => true,
+                    'data' => [
+                        'mensagem' => htmlspecialchars($mensagem),
+                        'id_animal' => $id_animal,
+                        'id_adotante' => $id_usuario,
+                        'data_envio' => date('d/m/Y H:i'),
+                        'enviado_por' => 'ong'
+                    ]
+                ]);
+                exit();
             } else {
-                header("Location: ../views/info-ong.php?mensagem=erro");
+                echo json_encode(['success' => false, 'message' => 'Erro ao enviar a mensagem.']);
+                exit();
             }
         }
     }
 
+
+
+    // public function mostrarTodasMensagens($tipoUsuario)
+    // {
+
+
+
+    //     if ($tipoUsuario === 'id_usuario') {
+    //     } else {
+    //         // Pega o corpo da requisição e decodifica o JSON
+    //         $input = file_get_contents('php://input');
+    //         $data = json_decode($input, true);  // Decodifica o JSON para um array associativo
+
+    //         // Agora $data['id_ong'] contém o id_ong que você enviou do JavaScript
+    //         $idOng = $data['id_ong'];
+    //         $todasMensagens = $this->conversa->exibirTodasMensagens($tipoUsuario, $idOng);
+    //         var_dump($todasMensagens);
+    //     }
+
+    //     $_SESSION['todas_mensagens'] = $todasMensagens;
+
+    //     if ($tipoUsuario === 'id_usuario') {
+    //         echo json_encode([
+    //             'success' => true,
+    //             'data' => [
+    //                 'mensagens' => $idOng
+    //             ]
+    //         ]);
+    //         exit();
+    //     } else {
+    //         echo json_encode([
+    //             'success' => true,
+    //             'data' => [
+    //                 'mensagens' => $todasMensagens
+    //             ]
+    //         ]);
+    //         exit();
+    //     }
+    // }
+
     public function mostrarTodasMensagens($tipoUsuario)
     {
-        $todasMensagens = $this->conversa->exibirTodasMensagens($tipoUsuario);
+        // Pega o corpo da requisição e decodifica o JSON
+        $input = file_get_contents('php://input');
+        $data = json_decode($input, true);  // Decodifica o JSON para um array associativo
+
+        if (!isset($data['id_ong'])) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'ID da ONG não foi enviado corretamente'
+            ]);
+            exit();
+        }
+
+        $idOng = $data['id_ong'];
+
+        // Verifica se $tipoUsuario está definido corretamente
+        if (!isset($tipoUsuario)) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Tipo de usuário não foi definido corretamente'
+            ]);
+            exit();
+        }
+
+        $todasMensagens = $this->conversa->exibirTodasMensagens($tipoUsuario, $idOng);
 
         if ($todasMensagens === false) {
-            echo "Não foi encontrado nenhuma mensagem";
+            echo json_encode([
+                'success' => false,
+                'message' => 'Não foi encontrada nenhuma mensagem'
+            ]);
             exit();
         }
 
-        $_SESSION['todas_mensagens'] = $todasMensagens;
-        var_dump($todasMensagens);
-
-        if ($tipoUsuario === 'id_usuario') {
-            header("Location: ../views/info-usuario.php");
-            include '../views/info-usuario.php';
-            exit();
-        } else {
-            header("Location: ../views/info-ong.php");
-            include '../views/info-ong.php';
-            exit();
-        }
+        echo json_encode([
+            'success' => true,
+            'data' => [
+                'mensagens' => $todasMensagens
+            ]
+        ]);
+        exit();
     }
 }
 
