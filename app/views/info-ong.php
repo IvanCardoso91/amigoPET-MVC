@@ -1,7 +1,6 @@
 <?php
 ob_start();
 session_start();
-require_once __DIR__ . '../../controllers/ConversaController.php';
 
 if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'ong') {
     header("Location: index.php?error=nao_autenticado");
@@ -20,8 +19,6 @@ $telefone = htmlspecialchars($_SESSION['telefone'] ?? null);
 $cnpj = htmlspecialchars($_SESSION['cnpj'] ?? null);
 $data_cadastro = htmlspecialchars($_SESSION['data_cadastro'] ?? null);
 $animais = $_SESSION['animais'] ?? null;
-
-$mensagens = $_SESSION['todas_mensagens'] ?? [];
 
 $mensagem_sucesso = '';
 $mensagem_erro = '';
@@ -147,36 +144,7 @@ if (isset($_GET['error'])) {
                 <button type="submit">Cadastrar Animal</button>
             </form>
         </div>
-        <div class="container">
-            <h2>Mensagens dos Adotantes</h2>
-            <div class="tabs">
-                <?php foreach ($mensagens as $mensagem): ?>
-                    <button onclick="showTab(<?php echo $mensagem['id_adotante']; ?>)">
-                        <?php echo htmlspecialchars($mensagem['nome_adotante']); ?> -
-                        <?php echo htmlspecialchars($mensagem['nome_animal']); ?>
-                    </button>
-                <?php endforeach; ?>
-            </div>
 
-            <?php foreach ($mensagens as $mensagem): ?>
-                <div id="tab<?php echo $mensagem['id_adotante']; ?>" class="tab-content">
-                    <p>Adotante: <?php echo htmlspecialchars($mensagem['nome_adotante']); ?></p>
-                    <p>Animal: <?php echo htmlspecialchars($mensagem['nome_animal']); ?></p>
-                    <p><strong><?php echo $mensagem['enviado_por'] == 'adotante' ? 'Adotante' : 'Você'; ?>:</strong>
-                        <?php echo htmlspecialchars($mensagem['mensagem']); ?></p>
-                    <p><small>Enviado em: <?php echo $mensagem['data_envio']; ?></small></p>
-
-                    <!-- Formulário para a ONG enviar nova mensagem -->
-                    <form method="POST" action="../controllers/ConversaController.php?action=envia_mensagem_ong">
-                        <input type="hidden" name="id_ong" value="<?php echo $id_ong; ?>">
-                        <input type="hidden" name="id_adotante" value="<?php echo $mensagem['id_adotante']; ?>">
-                        <input type="hidden" name="id_animal" value="<?php echo $mensagem['id_animal']; ?>">
-                        <input type="text" name="mensagem" placeholder="Digite sua mensagem">
-                        <button type="submit">Enviar</button>
-                    </form>
-                </div>
-            <?php endforeach; ?>
-        </div>
         <div class="block animais-cadastrados">
             <h2>Animais Cadastrados</h2>
             <table>

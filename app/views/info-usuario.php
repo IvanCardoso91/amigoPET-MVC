@@ -13,9 +13,6 @@ $telefone = htmlspecialchars($_SESSION['telefone']);
 $cpf = htmlspecialchars($_SESSION['cpf']);
 $data_nascimento = htmlspecialchars($_SESSION['data_nascimento']);
 
-$mensagens = $_SESSION['todas_mensagens'];
-
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -68,38 +65,6 @@ $mensagens = $_SESSION['todas_mensagens'];
         </button>
       </div>
     </div>
-
-    <div class="block chat">
-      <h2>Contato com ONG's</h2>
-      <div class="tabs">
-        <?php foreach ($mensagens as $mensagem): ?>
-          <button onclick="showTab(<?php echo $mensagem['id_ong']; ?>)">
-            <?php echo htmlspecialchars($mensagem['nome_ong']); ?> -
-            <?php echo htmlspecialchars($mensagem['nome_animal']); ?>
-          </button>
-        <?php endforeach; ?>
-      </div>
-
-      <?php foreach ($mensagens as $mensagem): ?>
-        <div id="tab<?php echo $mensagem['id_ong']; ?>" class="tab-content">
-          <p>ONG: <?php echo htmlspecialchars($mensagem['nome_ong']); ?></p>
-          <p>Animal: <?php echo htmlspecialchars($mensagem['nome_animal']); ?></p>
-          <p><strong><?php echo $mensagem['enviado_por'] == 'adotante' ? 'Você' : 'ONG'; ?>:</strong>
-            <?php echo htmlspecialchars($mensagem['mensagem']); ?></p>
-          <p><small>Enviado em: <?php echo $mensagem['data_envio']; ?></small></p>
-        </div>
-      <?php endforeach; ?>
-
-      <!-- Formulário para enviar nova mensagem -->
-      <form method="POST" action="UsuarioAdotanteController.php">
-        <input type="hidden" name="action" value="enviar_mensagem">
-        <input type="hidden" name="id_ong" value="<!-- ID da ONG -->">
-        <input type="hidden" name="id_animal" value="<!-- ID do Animal -->">
-        <input type="text" name="mensagem" placeholder="Digite sua mensagem">
-        <button type="submit">Enviar</button>
-      </form>
-    </div>
-
 
   </div>
 
