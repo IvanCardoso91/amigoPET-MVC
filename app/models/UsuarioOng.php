@@ -79,12 +79,14 @@ class UsuarioOng
         // Obtém o resultado
         $result = $stmt->get_result();
 
+
         // Verifica se encontrou algum usuário com o cnpj e email fornecidos
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             $this->id = $row['id_ong'];
             $this->nome_fantasia = $row['nome_fantasia'];
             $hashed_password = $row['senha'];
+
 
             // Verifica se a senha informada corresponde à senha criptografada armazenada
             if (password_verify($senha, $hashed_password)) {
@@ -104,10 +106,12 @@ class UsuarioOng
                 return true;
             } else {
                 // Senha incorreta
+                echo "senha incorreta";
                 return false;
             }
         } else {
             // Usuário não encontrado
+            echo "usuario nao encontrado";
             return false;
         }
     }

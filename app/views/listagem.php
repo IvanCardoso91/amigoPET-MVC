@@ -2,69 +2,153 @@
 ob_start();
 session_start();
 
+if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'adotante') {
+    header("Location: index.php?error=nao_autenticado");
+    exit();
+}
+
 if (!isset($_SESSION['todos_animais'])) {
-  header("Location: ../controllers/AnimalController.php?action=exibir_todos_animais");
-  exit();
+    header("Location: ../controllers/AnimalController.php?action=exibir_todos_animais");
+    exit();
 }
 
 $todosAnimais = $_SESSION['todos_animais'] ?? null;
+$mensagem_sucesso = '';
+$mensagem_erro = '';
 
+if (isset($_GET['mensagem']) && $_GET['mensagem'] === 'sucesso') {
+    $mensagem_sucesso = "Mensagem enviada com sucesso!";
+}
 
+if (isset($_GET['mensagem']) && $_GET['mensagem'] === 'erro') {
+    $mensagem_erro = "Mensagem não foi enviada.";
+}
 ?>
 <html lang="pt-BR">
 
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pets - Amigopet</title>
-  <link rel="stylesheet" href="./style/style-listagem.css" />
-  <style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pets - Amigopet</title>
+    <link rel="stylesheet" href="./style/style-listagem.css" />
+    <style>
     @import url("https://fonts.googleapis.com/css2?family=Jomolhari&display=swap");
-  </style>
+
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 5px;
+        width: 300px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .modal-content h3 {
+        text-align: center;
+    }
+
+    .modal-content form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-content input {
+        margin-bottom: 10px;
+    }
+    </style>
 </head>
 
 <body>
-  <header>
-    <div class="logo">
-      <a href="../../index.php">
-        <img src="./assets/logo-menor.svg" id="logo-amigopet" alt="logo amigopet" /></a>
-    </div>
-  </header>
-  <main>
-    <div id="popup-info" class="popup">
-      <div class="popup-content">
-        <span class="close-popup-btn" id="close-popup-info-btn">&times;</span>
-        <h2>Informações do Animal</h2>
-        <div id="animal-info">
-          <!-- Aqui só é adicionado informação que for incluida pelo JS, nao mexer nessa DIV -->
+    <header>
+        <div class="logo">
+            <a href="../../index.php">
+                <img src="./assets/logo-menor.svg" id="logo-amigopet" alt="logo amigopet" /></a>
         </div>
-      </div>
-    </div>
-    <div class="filters">
-      <select id="filtro">
-        <option value="all">Todos</option>
-        <option value="cachorro">Cachorro</option>
-        <option value="gato">Gato</option>
-      </select>
-    </div>
+    </header>
+    <main>
 
-    <div class="container">
-      <?php foreach ($todosAnimais as $animal): ?>
-        <div class="card">
-          <img src="<?= $animal['imagem']; ?>" alt="Imagem de <?= $animal['raca']; ?>">
-          <div class="info">
-            <h2><?= $animal['raca']; ?></h2>
-            <p>Tamanho: <?= $animal['porte']; ?></p>
-            <p>Peso: <?= $animal['peso']; ?>kg</p>
-            <p>Idade: <?= $animal['idade']; ?> anos</p>
-          </div>
+        <?php if ($mensagem_sucesso): ?>
+        <div class="success-message"><?php echo $mensagem_sucesso; ?></div>
+        <?php endif; ?>
+        <?php if ($mensagem_erro): ?>
+        <div class="error-message"><?php echo $mensagem_erro; ?></div>
+        <?php endif; ?>
+
+        <div class="container">
+            <?php foreach ($todosAnimais as $animal): ?>
+            <div class="card" data-id-animal="<?= $animal['id_animal']; ?>" data-id-ong="<?= $animal['id_ong']; ?>">
+                <img src="<?= $animal['imagem']; ?>" alt="Imagem de <?= $animal['raca']; ?>">
+                <div class="info">
+                    <h2><?= $animal['raca']; ?></h2>
+                    <p>Tamanho: <?= $animal['porte']; ?></p>
+                    <p>Peso: <?= $animal['peso']; ?>kg</p>
+                    <p>Idade: <?= $animal['idade']; ?> anos</p>
+                    <p>ONG: <span class="nomeOng"><?= $animal['nome_fantasia']; ?></span></p>
+                </div>
+            </div>
+            <?php endforeach; ?>
         </div>
-      <?php endforeach; ?>
-    </div>
-  </main>
 
-  <script>
+        <!-- Modal para Envio de Mensagem -->
+        <div id="mensagemModal" class="modal">
+            <div class="modal-content">
+                <h3>Enviar Mensagem para a ONG - <span id="nomeOng"></span></h3>
+                <p>Deseja adotar este animal? Então envie uma mensagem informando o motivo.</p>
+                <form id="formMensagem" action="../controllers/ConversaController.php?action=envia_mensagem"
+                    method="POST">
+                    <input type="hidden" name="id_animal" id="id_animal" />
+                    <input type="hidden" name="id_ong" id="id_ong" />
+
+                    <textarea name="mensagem" placeholder="Escreva sua mensagem" required></textarea>
+
+                    <button type="submit">Enviar</button>
+                </form>
+                <button id="closeModal">Fechar</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+    const modal = document.getElementById("mensagemModal");
+    const closeModal = document.getElementById("closeModal");
+
+    // Função para abrir a modal
+    function abrirModal() {
+        modal.style.display = "flex"; // Isso faz a modal aparecer centralizada
+    }
+
+    // Função para fechar a modal
+    closeModal.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', function() {
+
+            const idAnimal = this.getAttribute('data-id-animal');
+            const idOng = this.getAttribute('data-id-ong');
+            const nomeOng = this.querySelector('.nomeOng').textContent;
+
+            document.getElementById('id_animal').value = idAnimal;
+            document.getElementById('id_ong').value = idOng;
+            document.getElementById('nomeOng').textContent = nomeOng;
+
+            abrirModal(); // Abre a modal ao clicar no card
+        });
+    });
     // function openPopup(popupId) {
     //     const popup = document.getElementById(popupId);
     //     popup.style.display = "block";
@@ -121,7 +205,7 @@ $todosAnimais = $_SESSION['todos_animais'] ?? null;
     //     .addEventListener("click", function() {
     //         closePopup("popup-info");
     //     });
-  </script>
+    </script>
 </body>
 
 </html>

@@ -93,12 +93,10 @@ class AnimalController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->animal->id_animal = $_POST['id_animal'];
-            $this->animal->id_tipo = $_POST['id_tipo'];
             $this->animal->raca = $_POST['raca'];
             $this->animal->peso = $_POST['peso'];
             $this->animal->idade = $_POST['idade'];
             $this->animal->porte = $_POST['porte'];
-            $this->animal->sexo = $_POST['sexo'];
             $this->animal->descricao = $_POST['descricao'];
 
             // Verifica se foi feito upload de nova imagem
@@ -120,6 +118,7 @@ class AnimalController
 
             if ($this->animal->editarAnimal()) {
                 echo "Animal atualizado com sucesso!";
+                $this->mostrarPagina();
             } else {
                 echo "Erro ao atualizar o animal.";
             }

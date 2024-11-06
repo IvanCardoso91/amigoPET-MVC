@@ -12,8 +12,6 @@ CREATE TABLE usuario_adotante (
     PRIMARY KEY (id_usuario)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-//Criar tabela usuario_ong
-
 CREATE TABLE usuario_ong (
     id_ong BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     nome_fantasia VARCHAR(255) NOT NULL,
@@ -47,3 +45,16 @@ CREATE TABLE animal (
 ALTER TABLE animal
     ADD CONSTRAINT fk_ong FOREIGN KEY (id_ong) REFERENCES usuario_ong(id_ong) ON DELETE CASCADE,
     ADD CONSTRAINT fk_tipo FOREIGN KEY (id_tipo) REFERENCES tipo_animal(id_tipo) ON DELETE CASCADE;
+
+CREATE TABLE conversas (
+    id_conversa INT AUTO_INCREMENT PRIMARY KEY,
+    id_animal INT,
+    id_usuario BIGINT(20),
+    id_ong BIGINT(20),
+    mensagem TEXT,
+    data_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    enviado_por ENUM('adotante', 'ong'),
+    FOREIGN KEY (id_animal) REFERENCES animal(id_animal),
+    FOREIGN KEY (id_usuario) REFERENCES usuario_adotante(id_usuario),
+    FOREIGN KEY (id_ong) REFERENCES usuario_ong(id_ong)
+);

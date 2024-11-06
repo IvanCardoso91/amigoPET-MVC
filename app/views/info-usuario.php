@@ -7,30 +7,15 @@ if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'adotante') {
   exit();
 }
 
-$nome_completo = htmlspecialchars($dados_usuario['nome_completo']);
-$email = htmlspecialchars($dados_usuario['email']);
-$telefone = htmlspecialchars($dados_usuario['telefone']);
-$cpf = htmlspecialchars($dados_usuario['cpf']);
-$data_nascimento = htmlspecialchars($dados_usuario['data_nascimento']);
+$nome_completo = htmlspecialchars($_SESSION['nome_completo']);
+$email = htmlspecialchars($_SESSION['email']);
+$telefone = htmlspecialchars($_SESSION['telefone']);
+$cpf = htmlspecialchars($_SESSION['cpf']);
+$data_nascimento = htmlspecialchars($_SESSION['data_nascimento']);
 
-$mensagem_sucesso = '';
-$mensagem_erro = '';
+$mensagens = $_SESSION['todas_mensagens'];
 
-if (isset($_GET['success'])) {
-  if ($_GET['success'] == 1) {
-    $mensagem_sucesso = "Dados atualizados com sucesso!";
-  } elseif ($_GET['success'] == 'senha') {
-    $mensagem_sucesso = "Senha atualizada com sucesso!";
-  }
-}
 
-if (isset($_GET['error'])) {
-  if ($_GET['error'] == 1) {
-    $mensagem_erro = "Erro ao atualizar os dados.";
-  } elseif ($_GET['error'] == 'senha') {
-    $mensagem_erro = "Erro ao atualizar a senha. Verifique se a senha atual está correta.";
-  }
-}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -52,16 +37,10 @@ if (isset($_GET['error'])) {
     </a>
   </header>
   <div class="container">
-    <a class="button-list" href="../html/listagem.php">Veja os animais</a>
+    <a class="button-list" href="./listagem.php">Veja os animais</a>
     <!-- Primeiro Bloco -->
     <div class="block">
       <h2>Informações do Usuário</h2>
-      <?php if ($mensagem_sucesso): ?>
-        <div class="success-message"><?php echo $mensagem_sucesso; ?></div>
-      <?php endif; ?>
-      <?php if ($mensagem_erro): ?>
-        <div class="error-message"><?php echo $mensagem_erro; ?></div>
-      <?php endif; ?>
       <div class="form-group">
         <div>
           <label>E-mail do Usuário:</label>
@@ -89,28 +68,39 @@ if (isset($_GET['error'])) {
         </button>
       </div>
     </div>
+
     <div class="block chat">
       <h2>Contato com ONG's</h2>
       <div class="tabs">
-        <button onclick="showTab(1)">ONG 1 - 1 GATO</button>
-        <button onclick="showTab(2)">ONG 2 - 1 CACHORRO</button>
+        <?php foreach ($mensagens as $mensagem): ?>
+          <button onclick="showTab(<?php echo $mensagem['id_ong']; ?>)">
+            <?php echo htmlspecialchars($mensagem['nome_ong']); ?> -
+            <?php echo htmlspecialchars($mensagem['nome_animal']); ?>
+          </button>
+        <?php endforeach; ?>
       </div>
-      <div id="tab1" class="tab-content">
-        <p>ONG: ONG 1</p>
-        <p>Animal: 1 GATO</p>
-        <p>Mensagem: Recebemos sua mensagem.</p>
-        <input type="text" placeholder="Responder..." />
-      </div>
-      <div id="tab2" class="tab-content">
-        <p>ONG: ONG 2</p>
-        <p>Animal: 1 CACHORRO</p>
-        <p>
-          Mensagem: Estamos disponibilizando todas as informações
-          requisitadas.
-        </p>
-        <input type="text" placeholder="Responder..." />
-      </div>
+
+      <?php foreach ($mensagens as $mensagem): ?>
+        <div id="tab<?php echo $mensagem['id_ong']; ?>" class="tab-content">
+          <p>ONG: <?php echo htmlspecialchars($mensagem['nome_ong']); ?></p>
+          <p>Animal: <?php echo htmlspecialchars($mensagem['nome_animal']); ?></p>
+          <p><strong><?php echo $mensagem['enviado_por'] == 'adotante' ? 'Você' : 'ONG'; ?>:</strong>
+            <?php echo htmlspecialchars($mensagem['mensagem']); ?></p>
+          <p><small>Enviado em: <?php echo $mensagem['data_envio']; ?></small></p>
+        </div>
+      <?php endforeach; ?>
+
+      <!-- Formulário para enviar nova mensagem -->
+      <form method="POST" action="UsuarioAdotanteController.php">
+        <input type="hidden" name="action" value="enviar_mensagem">
+        <input type="hidden" name="id_ong" value="<!-- ID da ONG -->">
+        <input type="hidden" name="id_animal" value="<!-- ID do Animal -->">
+        <input type="text" name="mensagem" placeholder="Digite sua mensagem">
+        <button type="submit">Enviar</button>
+      </form>
     </div>
+
+
   </div>
 
   <!-- Modals -->

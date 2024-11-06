@@ -1,4 +1,6 @@
 <?php
+ob_start();
+session_start();
 require_once __DIR__ . '/../models/UsuarioAdotante.php';
 require_once __DIR__ . '/../../config/database.php';
 
@@ -22,7 +24,14 @@ class UsuarioAdotanteController
         }
 
         $id_usuario = $_SESSION['id_usuario'];
+
         $dados_usuario = $this->usuarioAdotante->getUsuarioById($id_usuario);
+
+        $_SESSION['nome_completo'] = $dados_usuario['nome_completo'];
+        $_SESSION['email'] = $dados_usuario['email'];
+        $_SESSION['telefone'] = $dados_usuario['telefone'];
+        $_SESSION['cpf'] = $dados_usuario['cpf'];
+        $_SESSION['data_nascimento'] = $dados_usuario['data_nascimento'];
 
         if ($dados_usuario === false) {
             echo "Erro ao buscar os dados do usuário.";
@@ -30,6 +39,7 @@ class UsuarioAdotanteController
         }
 
         header("Location: ../views/info-usuario.php?id=" . $id_usuario);
+        return $dados_usuario;
         exit();
     }
 

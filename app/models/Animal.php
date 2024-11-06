@@ -83,24 +83,28 @@ class Animal
 
     public function buscarTodosAnimais()
     {
-        $query = "SELECT * FROM " . $this->table_name;
+        $query = "SELECT animal.*, usuario_ong.nome_fantasia 
+              FROM " . $this->table_name . "
+              JOIN 
+              usuario_ong 
+              ON 
+              animal.id_ong = usuario_ong.id_ong";
+
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         $result = $stmt->get_result();
 
-        // Retorna os dados dos animais como um array
         $todosAnimais = [];
         while ($row = $result->fetch_assoc()) {
             $todosAnimais[] = $row;
         }
-
         return $todosAnimais;
     }
 
     public function editarAnimal()
     {
         $query = "UPDATE " . $this->table_name . " 
-                  SET id_tipo = ?, raca = ?, peso = ?, idade = ?, porte = ?, sexo = ?, descricao = ?, imagem = ?
+                  SET raca = ?, peso = ?, idade = ?, porte = ?, descricao = ?, imagem = ?
                   WHERE id_animal = ?";
 
         $stmt = $this->conn->prepare($query);
@@ -110,24 +114,20 @@ class Animal
             return false;
         }
 
-        $this->id_tipo = htmlspecialchars(strip_tags($this->id_tipo));
         $this->raca = htmlspecialchars(strip_tags($this->raca));
         $this->peso = htmlspecialchars(strip_tags($this->peso));
         $this->idade = htmlspecialchars(strip_tags($this->idade));
         $this->porte = htmlspecialchars(strip_tags($this->porte));
-        $this->sexo = htmlspecialchars(strip_tags($this->sexo));
         $this->descricao = htmlspecialchars(strip_tags($this->descricao));
         $this->imagem = htmlspecialchars(strip_tags($this->imagem));
         $this->id_animal = htmlspecialchars(strip_tags($this->id_animal));
 
         $stmt->bind_param(
-            'ississssi',
-            $this->id_tipo,
+            'ssisssi',
             $this->raca,
             $this->peso,
             $this->idade,
             $this->porte,
-            $this->sexo,
             $this->descricao,
             $this->imagem,
             $this->id_animal

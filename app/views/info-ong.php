@@ -1,18 +1,27 @@
 <?php
 ob_start();
-// views/info-usuario.php
+session_start();
+require_once __DIR__ . '../../controllers/ConversaController.php';
+
 if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'ong') {
     header("Location: index.php?error=nao_autenticado");
     exit();
 }
 
-$id_ong = $_GET['id_ong'] ?? null;
+if (!isset($_SESSION['todas_mensagens'])) {
+    $controller = new ConversaController();
+    $controller->mostrarTodasMensagens('id_ong');
+}
+
+$id_ong = $_SESSION['id_ong'] ?? null;
 $nome_fantasia = htmlspecialchars($_SESSION['nome_fantasia'] ?? null);
 $email = htmlspecialchars($_SESSION['email'] ?? null);
 $telefone = htmlspecialchars($_SESSION['telefone'] ?? null);
 $cnpj = htmlspecialchars($_SESSION['cnpj'] ?? null);
 $data_cadastro = htmlspecialchars($_SESSION['data_cadastro'] ?? null);
 $animais = $_SESSION['animais'] ?? null;
+
+$mensagens = $_SESSION['todas_mensagens'] ?? [];
 
 $mensagem_sucesso = '';
 $mensagem_erro = '';
@@ -138,6 +147,36 @@ if (isset($_GET['error'])) {
                 <button type="submit">Cadastrar Animal</button>
             </form>
         </div>
+        <div class="container">
+            <h2>Mensagens dos Adotantes</h2>
+            <div class="tabs">
+                <?php foreach ($mensagens as $mensagem): ?>
+                    <button onclick="showTab(<?php echo $mensagem['id_adotante']; ?>)">
+                        <?php echo htmlspecialchars($mensagem['nome_adotante']); ?> -
+                        <?php echo htmlspecialchars($mensagem['nome_animal']); ?>
+                    </button>
+                <?php endforeach; ?>
+            </div>
+
+            <?php foreach ($mensagens as $mensagem): ?>
+                <div id="tab<?php echo $mensagem['id_adotante']; ?>" class="tab-content">
+                    <p>Adotante: <?php echo htmlspecialchars($mensagem['nome_adotante']); ?></p>
+                    <p>Animal: <?php echo htmlspecialchars($mensagem['nome_animal']); ?></p>
+                    <p><strong><?php echo $mensagem['enviado_por'] == 'adotante' ? 'Adotante' : 'Você'; ?>:</strong>
+                        <?php echo htmlspecialchars($mensagem['mensagem']); ?></p>
+                    <p><small>Enviado em: <?php echo $mensagem['data_envio']; ?></small></p>
+
+                    <!-- Formulário para a ONG enviar nova mensagem -->
+                    <form method="POST" action="../controllers/ConversaController.php?action=envia_mensagem_ong">
+                        <input type="hidden" name="id_ong" value="<?php echo $id_ong; ?>">
+                        <input type="hidden" name="id_adotante" value="<?php echo $mensagem['id_adotante']; ?>">
+                        <input type="hidden" name="id_animal" value="<?php echo $mensagem['id_animal']; ?>">
+                        <input type="text" name="mensagem" placeholder="Digite sua mensagem">
+                        <button type="submit">Enviar</button>
+                    </form>
+                </div>
+            <?php endforeach; ?>
+        </div>
         <div class="block animais-cadastrados">
             <h2>Animais Cadastrados</h2>
             <table>
@@ -225,20 +264,16 @@ if (isset($_GET['error'])) {
                 enctype="multipart/form-data">
                 <input type="hidden" id="id_animal" name="id_animal">
                 <label for="raca">Raça:</label>
-                <input type="text" id="raca" name="raca" required>
+                <input type="text" id="raca" name="raca" value="<?php echo $animal['raca'] ?>" required>
                 <label for="peso">Peso:</label>
-                <input type="text" id="peso" name="peso" required>
+                <input type="text" id="peso" name="peso" value="<?php echo $animal['peso']; ?>" required>
                 <label for="idade">Idade:</label>
-                <input type="text" id="idade" name="idade" required>
+                <input type="text" id="idade" name="idade" value="<?php echo $animal['idade']; ?>" required>
                 <label for="porte">Porte:</label>
-                <input type="text" id="porte" name="porte" required>
+                <input type="text" id="porte" name="porte" value="<?php echo $animal['porte']; ?>" required>
                 <label for="sexo">Sexo:</label>
-                <select id="sexo" name="sexo">
-                    <option value="1">Macho</option>
-                    <option value="2">Fêmea</option>
-                </select>
                 <label for="descricao">Descrição:</label>
-                <textarea id="descricao" name="descricao" required></textarea>
+                <textarea id="descricao" name="descricao" value="<?php echo $animal['descricao']; ?>"></textarea>
                 <label for="imagem">Imagem:</label>
                 <input type="file" id="imagem" name="imagem">
                 <input type="hidden" id="imagem_atual" name="imagem_atual">
