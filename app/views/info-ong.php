@@ -6,11 +6,11 @@ if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'ong') {
     header("Location: index.php?error=nao_autenticado");
     exit();
 }
-
-if (!isset($_SESSION['todas_mensagens'])) {
-    $controller = new ConversaController();
-    $controller->mostrarTodasMensagens('id_ong');
-}
+            //
+            //    if (!isset($_SESSION['todas_mensagens'])) {
+            //        $controller = new ConversaController();
+            //       $controller->mostrarTodasMensagens('id_ong');
+            //   }
 
 $id_ong = $_SESSION['id_ong'] ?? null;
 $nome_fantasia = htmlspecialchars($_SESSION['nome_fantasia'] ?? null);
@@ -39,6 +39,25 @@ if (isset($_GET['error'])) {
     }
 }
 
+function formatarCnpj($cnpj)
+{
+    $cnpj = preg_replace('/\D/', '', $cnpj);
+    if (strlen($cnpj) === 14) {
+        return preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $cnpj);
+    }
+    return $cnpj;
+}
+function formatarTelefone($telefone)
+{
+    $telefone = preg_replace('/\D/', '', $telefone);
+    if (strlen($telefone) === 10) {
+        return preg_replace('/(\d{2})(\d{4})(\d{4})/', '($1) $2-$3', $telefone);
+    } elseif (strlen($telefone) === 11) {
+        return preg_replace('/(\d{2})(\d{5})(\d{4})/', '($1) $2-$3', $telefone);
+    }
+    return $telefone;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -60,7 +79,7 @@ if (isset($_GET['error'])) {
         </a>
     </header>
     <div class="container">
-        <a class="button-list" href="../html/listagem.php">Veja os animais</a>
+        <a class="button-list" href="../views/listagem.php">Veja os animais</a>
         <!-- Primeiro Bloco -->
         <div class="block">
             <h2>Informações da Ong</h2>
@@ -73,15 +92,15 @@ if (isset($_GET['error'])) {
             <div class="form-group">
                 <div>
                     <label>CNPJ:</label>
-                    <span><?php echo $cnpj; ?></span>
+                    <span><?php echo formatarCnpj($cnpj); ?></span>
                 </div>
                 <div>
                     <label>E-mail da Ong:</label>
                     <span><?php echo $email; ?></span>
                 </div>
                 <div>
-                    <label>Número de Contato:</label>
-                    <span><?php echo $telefone; ?></span>
+                    <label>Telefone:</label>
+                    <span><?php echo formatarTelefone($telefone); ?></span>
                 </div>
                 <div>
                     <label>Nome Fantasia:</label>

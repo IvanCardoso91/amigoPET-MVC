@@ -13,6 +13,29 @@ $telefone = htmlspecialchars($_SESSION['telefone']);
 $cpf = htmlspecialchars($_SESSION['cpf']);
 $data_nascimento = htmlspecialchars($_SESSION['data_nascimento']);
 
+function formatarCpf($cpf)
+{
+  // Remove qualquer caractere que não seja número
+  $cpf = preg_replace('/\D/', '', $cpf);
+
+  // Verifica se o CPF tem 11 dígitos e aplica a máscara
+  if (strlen($cpf) === 11) {
+    return preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $cpf);
+  }
+  // Retorna o CPF sem máscara caso tenha tamanho diferente
+  return $cpf;
+}
+function formatarTelefone($telefone)
+{
+  $telefone = preg_replace('/\D/', '', $telefone);
+  if (strlen($telefone) === 10) {
+    return preg_replace('/(\d{2})(\d{4})(\d{4})/', '($1) $2-$3', $telefone);
+  } elseif (strlen($telefone) === 11) {
+    return preg_replace('/(\d{2})(\d{5})(\d{4})/', '($1) $2-$3', $telefone);
+  }
+  return $telefone;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -44,8 +67,8 @@ $data_nascimento = htmlspecialchars($_SESSION['data_nascimento']);
           <span><?php echo $email; ?></span>
         </div>
         <div>
-          <label>Número do Contato:</label>
-          <span><?php echo $telefone; ?></span>
+          <label>Telefone:</label>
+          <span><?php echo formatarTelefone($telefone); ?></span>
         </div>
         <div>
           <label>Nome Completo:</label>
@@ -53,7 +76,7 @@ $data_nascimento = htmlspecialchars($_SESSION['data_nascimento']);
         </div>
         <div>
           <label>CPF:</label>
-          <span><?php echo $cpf; ?></span>
+          <span><?php echo formatarCpf($cpf); ?></span>
         </div>
       </div>
       <div class="buttons">
@@ -73,8 +96,7 @@ $data_nascimento = htmlspecialchars($_SESSION['data_nascimento']);
     <div class="modal-content">
       <button class="close" onclick="closePasswordModal()">×</button>
       <h3>Redefinir Senha</h3>
-      <form action="../../app/controllers/UsuarioAdotanteController.php?action=atualizar_senha_usuario"
-        method="POST">
+      <form action="../../app/controllers/UsuarioAdotanteController.php?action=atualizar_senha_usuario" method="POST">
         <label for="current-password">Senha Atual:</label>
         <input type="password" id="current-password" name="current-password" required />
         <label for="new-password">Nova Senha:</label>
@@ -90,8 +112,7 @@ $data_nascimento = htmlspecialchars($_SESSION['data_nascimento']);
     <div class="modal-content">
       <button class="close" onclick="closeEditModal()">×</button>
       <h3>Editar Informações do Usuário</h3>
-      <form action="../../app/controllers/UsuarioAdotanteController.php?action=atualizar_dados_usuario"
-        method="POST">
+      <form action="../../app/controllers/UsuarioAdotanteController.php?action=atualizar_dados_usuario" method="POST">
         <label for="edit-email">E-mail do Usuário:</label>
         <input type="email" id="edit-email" name="email" value="<?php echo $email; ?>" required />
         <label for="edit-contact">Número para Contato:</label>
