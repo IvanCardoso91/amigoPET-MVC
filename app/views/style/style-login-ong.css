@@ -1,21 +1,13 @@
-body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #e1e1e1;
-}
-p,h2, a, h1, h4{
-    color: #0B2813;
-}
-header {
-    width: auto;
-    height: 60px;
-    padding: 20px;
-    background-color: #A7FDAF;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+body{
+    background-color: #FFF9EB;
+
 }
 
+.logo{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 10px ;
+}
 .frase {
     width: auto;
     height: 0;
@@ -24,19 +16,21 @@ header {
 
 .login-titulo {
     display: flex;
+    color:  #EFDCAE;
     justify-content: center;
-    height: 20px;
+    margin: 5px;
+    padding-bottom: 10px;
 }
 
 .form {
     padding: 10px;
     margin-top: 50px;
-    height: 330px;
+    height: 300px;
     width: 400px;
     display: flex;
     flex-direction: column;
     background: transparent;
-    background-color:#A7FDAF;
+    background-color: #A0704C;
     border-radius: 1px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
@@ -47,9 +41,9 @@ header {
 }
 
 .div-input {
-    margin: 5px;
     display: flex;
     justify-content: center;
+    margin: 5px;
 }
 
 .links {
@@ -59,52 +53,44 @@ header {
 }
 
 .links-container {
-    margin: 5px;
+    margin: 20px;
     padding-top: 20px;
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
 }
 
-#cnpj-input {    
-    font-size: large;
-    width: 200px;
-    height: 30px;
-    margin: 5px;
-    border-radius: 5px;
-}
-
 #email-input {
-    font-size: large;
     width: 200px;
-    height: 30px;
     margin: 5px;
+    margin-bottom: 10px;
     border-radius: 5px;
+    height: 30px;
+    font-size: large;
 }
 
 #senha-input {
-    font-size: large;
     width: 200px;
-    height: 30px;
     margin: 5px;
+    margin-bottom: 10px;
     border-radius: 5px;
+    height: 30px;
+    font-size: large;
 }
 
 #submit-button {
-    width: 100px;
-    height: 25px;
+    background-color: #FFF9EB;
+    width: 150px;
+    height: 40px;
     font-size: 15px;
     margin: 5px;
-    border-radius: 5px;
+    border-radius: 15px;
     text-align: center;
-    text-decoration: underline solid rgb(21, 139, 27) 3px;
     padding-top: 2px;
 }
 
 #submit-button:hover {
-    background-color: #2ea02e94;
-    text-decoration: none;
-    border-radius: 1px;
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5)
 }
 
 #logo {

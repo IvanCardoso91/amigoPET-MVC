@@ -5,18 +5,17 @@ html {
 body {
     margin: 0%;
     padding: 0%;
-    background-color: #E3E1E1;
-}
+    background-color: #FFF9EB;
 
+}
 a {
     text-decoration: none;
-    color: #0B2813;
     font-size: 28px;
 }
 
 h2 {
     font-size: 60px;
-    color: #0B2813;
+
 }
 
 p {
@@ -24,54 +23,57 @@ p {
 }
 
 .header {
-    background-color: #A7FDAF;
-    padding: 25px;
+    background-color: #FFF9EB;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.logo {
-    margin-right: 10px;
-    margin-bottom: 20px;
-}
+
 
 .options {
     font-family: "Josefin Sans", sans-serif;
     display: flex;
     font-size: 32px;
-    gap: 40px;
+    gap: 50px;
     cursor: pointer;
     flex-direction: row;
     align-items: center;
+    padding-right: 15px;
 }
 
 .options a {
     transition: color 0.3s ease;
+    color: #A98361;
 }
 
 .login-header {
-    background-color: #52C584;
-    border-radius: 5px;
+    background-color: #A0704C;
+    border-radius: 15px;
+    width: auto;
+    border: 1px transparent;
+    padding: 0px 20px;
+}
+.login-header a{
+    color:#FFF9EB;
+}
+.cadastro-header a{
+    color: #FFF9EB;
+}
+.login-header:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5)
+}
+
+.cadastro-header {
+    background-color: #A0704C;
+    border-radius: 15px;
     width: auto;
     border: 1px transparent;
     padding: 0px 20px;
 }
 
-.login-header:hover {
-    background-color: #65df71;
-}
-
-.cadastro-header {
-    background-color: #52C584;
-    border-radius: 5px;
-    border: #3F644F;
-    padding: 0px 20px;
-}
-
 .cadastro-header:hover {
-    background-color: #65df71;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5)
 }
 
 .menu {
@@ -86,14 +88,22 @@ p {
 }
 
 .adote-menu {
+    
     display: inline-block;
     text-align: center;
-    background-color: #52C584;
+    align-items: center;
+    width: 275px;
+    height:75px;
+    background-color: #A0704C;
     padding: 10px;
-    border-radius: 5px;
-    border: #3F644F;
+    border-radius: 15px;
+    transition: box-shadow 0.3s ease;
 }
 
+.adote-menu a{
+    font-size: 50px;
+    color: #FFF9EB; 
+}
 .img-menu {
     margin-left: auto;
 }
@@ -101,36 +111,41 @@ p {
 .img-menu img {
     max-width: 100%;
     height: auto;
-    width: 300px;
+    width: 500px;
     display: block;
     margin: 0 auto;
 }
 
 .adote-menu:hover {
-    background-color: #65df71;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) ;
 }
 
 .servicos {
     padding: 20px;
-    background-color: #A7FDAF;
+    background-color: #826249;
 }
 
 .conteudo {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
+    color: #FFF9EB;
 }
 
 .texto-servicos {
     margin-top: 20px;
     text-align: center;
+    color: #FFF9EB;
 }
+
 
 .sobre-nos {
     padding: 20px;
     display: flex;
     align-items: center;
     text-align: center;
+    color: #826249;
 }
 
 .conteudo-sobre {
@@ -139,14 +154,10 @@ p {
 }
 
 .footer {
-    background-color: #A7FDAF;
+    background-color: #826249;
     padding: 25px;
     position: relative;
-}
-
-.logo-footer {
-    display: grid;
-    grid-template-columns: auto auto;
+    color:#FFF9EB;
 }
 
 .contato {
@@ -160,20 +171,9 @@ p {
     width: 100%;
 }
 
-#servicos:hover {
-    color: #005008;
-}
-
-#sobre:hover {
-    color: #005008;
-}
-
-#contato:hover {
-    color: #005008;
-}
 
 #adote-ja {
-    color: #0B2813;
+    color: #826249;;
 }
 
 #cachorro-servicos {
@@ -191,7 +191,7 @@ p {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #a1f786;
+    background:#A0704C;
 }
 
 .popup {
@@ -201,7 +201,7 @@ p {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 300px;
-    background-color: #fff;
+    background-color:#FFF9EB;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -218,15 +218,15 @@ p {
 .close-btn {
     display: inline-block;
     padding: 5px 10px;
-    background-color: #52C584;
-    color: #0B2813;
+    background-color:#A0704C;
+    color:#FFF9EB;
     text-decoration: none;
     border-radius: 5px;
     margin-top: 10px;
 }
 
 .close-btn:hover {
-    background-color: #65df71;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) ;
 }
 
 .popup.show {

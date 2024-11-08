@@ -19,7 +19,7 @@ session_start();
 <body>
     <div class="header">
         <div class="logo">
-            <img src="./app/views/assets/logo-maior.svg" alt="logo amigopet" />
+            <img src="./app/views/assets/logo.svg" alt="logo amigopet" />
         </div>
         <div class="options">
             <a href="#servicos" id="servicos-options">Serviços</a>
@@ -140,7 +140,6 @@ session_start();
 
     <section id="footer" class="footer">
         <div class="logo-footer">
-            <img src="./app/views/assets/logo-menor.svg" alt="" />
             <div class="contato">
                 <h2>Contato</h2>
                 <p>EMAIL:amigopet@gmail.com</p>
