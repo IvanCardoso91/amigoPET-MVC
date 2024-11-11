@@ -1,8 +1,6 @@
-body{
+body {
     background-color: #FFF9EB;
-
 }
-
 
 header {
     display: flex;
@@ -17,10 +15,11 @@ header {
 }
 
 .titulo-form {
-    color:  #EFDCAE;
-    display: flex;
-    justify-content: center;
+    color: #EFDCAE;
+    text-align: center;
     margin: 5px;
+    font-family: "Jomolhari", serif;
+    font-size: 24px;
 }
 
 .form {
@@ -31,9 +30,10 @@ header {
     flex-direction: column;
     background: transparent;
     background-color: #A0704C;
-    border-radius: 1px;
+    border-radius: 4px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     justify-content: center;
+    align-items: center;
 }
 
 .form-container {
@@ -41,50 +41,33 @@ header {
     justify-content: center;
 }
 
+.caixa-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
 .div-input {
-    margin: 5px;
+    margin: 10px;
     display: flex;
     justify-content: center;
 }
 
-#email-input {
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="text"],
+input[type="date"],
+.flatpickr-input {
     width: 200px;
     height: 25px;
     font-size: medium;
     margin-bottom: 8px;
+    padding: 10px;
+    border: 1px solid #ccc;
     border-radius: 5px;
-}
-
-#senha-input {
-    width: 200px;
-    height: 25px;
-    font-size: medium;
-    margin-bottom: 8px;
-    border-radius: 5px;
-}
-
-#nome-fantasia-input {
-    width: 200px;
-    height: 25px;
-    font-size: medium;
-    margin-bottom: 8px;
-    border-radius: 5px;
-}
-
-#telefone-input {
-    width: 200px;
-    height: 25px;
-    font-size: medium;
-    margin-bottom: 8px;
-    border-radius: 5px;
-}
-
-#cpf-input {
-    width: 200px;
-    height: 25px;
-    font-size: medium;
-    margin-bottom: 8px;
-    border-radius: 5px;
+    box-sizing: border-box;
 }
 
 #submit-button {
@@ -96,10 +79,12 @@ header {
     border-radius: 15px;
     text-align: center;
     padding-top: 2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 #submit-button:hover {
-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5)
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 #logo {
@@ -107,13 +92,20 @@ box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5)
     width: 15rem;
 }
 
-.caixa-input {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+/* Estilos para o Flatpickr */
+.flatpickr-calendar {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.flatpickr-input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Modal */
 .modal {
     display: none;
     position: fixed;
@@ -123,7 +115,6 @@ box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5)
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgb(0, 0, 0);
     background-color: rgba(0, 0, 0, 0.4);
 }
 
@@ -148,24 +139,4 @@ box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5)
     color: black;
     text-decoration: none;
     cursor: pointer;
-}
-
-.titulo-form {
-    text-align: center;
-}
-
-.caixa-input {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.div-input {
-    margin: 10px;
-}
-
-.form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }

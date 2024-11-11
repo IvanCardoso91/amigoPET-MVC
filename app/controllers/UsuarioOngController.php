@@ -43,10 +43,14 @@ class UsuarioOngController
     public function cadastrar()
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+            $cpf = preg_replace('/\D/', '', $_POST['cnpj']);
+            $telefone = preg_replace('/\D/', '', $_POST['telefone']);
+
             $this->usuarioOng->nome_fantasia = $_POST['nome_fantasia'];
             $this->usuarioOng->email = $_POST['email'];
-            $this->usuarioOng->telefone = $_POST['telefone'];
-            $this->usuarioOng->cnpj = $_POST['cnpj'];
+            $this->usuarioOng->telefone = $telefone;
+            $this->usuarioOng->cnpj = $cpf;
             $this->usuarioOng->senha = $_POST['senha'];
 
             if ($this->usuarioOng->cadastrar()) {
@@ -60,7 +64,8 @@ class UsuarioOngController
 
     public function login()
     {
-        $cnpj = $_POST['cnpj'];
+        $cpf = preg_replace('/\D/', '', $_POST['cnpj']);
+        $cnpj = $cpf;
         $senha = $_POST['senha'];
 
         if ($this->usuarioOng->login($cnpj, $senha)) {

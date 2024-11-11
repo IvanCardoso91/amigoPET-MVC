@@ -47,14 +47,16 @@ class UsuarioAdotanteController
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+            $cpf = preg_replace('/\D/', '', $_POST['cpf']);
+            $telefone = preg_replace('/\D/', '', $_POST['telefone']);
+
             $this->usuarioAdotante->nome_completo = $_POST['nome_completo'];
             $this->usuarioAdotante->email = $_POST['email'];
-            $this->usuarioAdotante->telefone = $_POST['telefone'];
+            $this->usuarioAdotante->telefone = $telefone;
             $this->usuarioAdotante->senha = $_POST['senha'];
-            $this->usuarioAdotante->cpf = $_POST['cpf'];
+            $this->usuarioAdotante->cpf = $cpf;
             $this->usuarioAdotante->data_nascimento = $_POST['data_nascimento'];
 
-            // aqui ele verifica se deu tudo certo em cadastrar, se sim ele redirecionara o usuario a uma pagina de sucesso / se nao exibirá uma informação de erro (pode ser melhorado ambos os fluxos)
             if ($this->usuarioAdotante->cadastrar()) {
                 echo "Cadastro realizado com sucesso!";
                 require __DIR__ . '../../views/sucesso-cadastro-usuario.html';

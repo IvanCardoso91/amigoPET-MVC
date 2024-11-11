@@ -33,6 +33,7 @@
             name="cnpj"
             required
             placeholder="CNPJ"
+            maxlength="18"
           />
         </div>
         <div class="div-input">
@@ -51,11 +52,25 @@
           <a href="./esqueceu-senha-ong.html" class="links"
             >Esqueceu sua senha?</a
           >
-          <a href="./cadastro-ong.html" class="links"
-            >Não sou cadastrado</a
-          >
+          <a href="./cadastro-ong.html" class="links">Não sou cadastrado</a>
         </div>
       </form>
     </div>
+    <script>
+      document.getElementById("cnpj").addEventListener("input", function (e) {
+        let value = e.target.value.replace(/\D/g, "");
+
+        if (value.length > 14) {
+          value = value.slice(0, 14);
+        }
+
+        value = value.replace(/^(\d{2})(\d)/, "$1.$2");
+        value = value.replace(/(\d{3})(\d)/, "$1.$2");
+        value = value.replace(/(\d{3})(\d)/, "$1/$2");
+        value = value.replace(/(\d{4})(\d{2})$/, "$1-$2");
+
+        e.target.value = value;
+      });
+    </script>
   </body>
 </html>

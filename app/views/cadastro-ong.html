@@ -30,16 +30,14 @@
             <div class="div-input">
               <input
                 type="text"
-                id="nome_fantasia"
                 name="nome_fantasia"
                 required
                 placeholder="Nome fantasia"
               />
             </div>
-            <div>
+            <div class="div-input">
               <input
                 type="email"
-                id="email"
                 name="email"
                 required
                 placeholder="Email da empresa"
@@ -48,9 +46,9 @@
             <div class="div-input">
               <input
                 type="tel"
-                id="telefone"
                 name="telefone"
-                placeholder="Numero para contato"
+                id="telefone"
+                placeholder="Número para contato"
                 required
               />
             </div>
@@ -66,7 +64,6 @@
             <div class="div-input">
               <input
                 type="password"
-                id="senha"
                 name="senha"
                 required
                 placeholder="Crie sua senha"
@@ -79,5 +76,41 @@
         </form>
       </div>
     </div>
+    <script>
+      document
+        .getElementById("telefone")
+        .addEventListener("input", function (e) {
+          let value = e.target.value.replace(/\D/g, "");
+
+          if (value.length > 11) {
+            value = value.slice(0, 11);
+          }
+
+          if (value.length <= 10) {
+            value = value.replace(/^(\d{2})(\d)/, "($1) $2");
+            value = value.replace(/(\d{4})(\d)/, "$1-$2");
+          } else {
+            value = value.replace(/^(\d{2})(\d)/, "($1) $2");
+            value = value.replace(/(\d{5})(\d)/, "$1-$2");
+          }
+
+          e.target.value = value;
+        });
+
+      document.getElementById("cnpj").addEventListener("input", function (e) {
+        let value = e.target.value.replace(/\D/g, "");
+
+        if (value.length > 14) {
+          value = value.slice(0, 14);
+        }
+
+        value = value.replace(/^(\d{2})(\d)/, "$1.$2");
+        value = value.replace(/(\d{3})(\d)/, "$1.$2");
+        value = value.replace(/(\d{3})(\d)/, "$1/$2");
+        value = value.replace(/(\d{4})(\d{2})$/, "$1-$2");
+
+        e.target.value = value;
+      });
+    </script>
   </body>
 </html>
