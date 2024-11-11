@@ -136,7 +136,7 @@ class UsuarioOng
     public function getOngByCNPJ($cnpj)
     {
         // Defina a consulta SQL para selecionar os dados da ONG pelo CNPJ
-        $query = "SELECT id_ong, nome_fantasia, email, telefone, cnpj, data_cadastro FROM " . $this->table_name . " WHERE cnpj = ? LIMIT 1";
+        $query = "SELECT id_ong, nome_fantasia, email, telefone, cnpj, data_cadastro, senha FROM " . $this->table_name . " WHERE cnpj = ? LIMIT 1";
 
         // Prepare a consulta
         $stmt = $this->conn->prepare($query);
@@ -177,6 +177,7 @@ class UsuarioOng
         $row = $result->fetch_assoc();
         $hashed_password = $row['senha'];
 
+
         if (!password_verify($senha_atual, $hashed_password)) {
             echo "Senha atual incorreta.";
             return false;
@@ -213,6 +214,48 @@ class UsuarioOng
         $telefone = htmlspecialchars(strip_tags($telefone));
 
         $stmt->bind_param('sssi', $nome_fantasia, $email, $telefone, $id);
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            echo "Erro ao executar a query: " . $stmt->error;
+            return false;
+        }
+    }
+
+    public function atualizarSenhaGeradaRandomicamente($id, $senha_atual, $nova_senha)
+    {
+        // Primeiro, verificar se a senha atual está correta
+        $query = "SELECT senha FROM " . $this->table_name . " WHERE id_ong = ? LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        if ($stmt === false) {
+            echo "Erro na preparação da query: " . $this->conn->error;
+            return false;
+        }
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows === 0) {
+            echo "Usuário não encontrado.";
+            return false;
+        }
+        $row = $result->fetch_assoc();
+        $hashed_password = $row['senha'];
+
+
+        if ($senha_atual !== $hashed_password) {
+            echo "Senha atual incorreta.";
+            return false;
+        }
+
+        // Atualizar a senha
+        $nova_senha_hash = password_hash($nova_senha, PASSWORD_DEFAULT);
+        $query = "UPDATE " . $this->table_name . " SET senha = ? WHERE id_ong = ?";
+        $stmt = $this->conn->prepare($query);
+        if ($stmt === false) {
+            echo "Erro na preparação da query: " . $this->conn->error;
+            return false;
+        }
+        $stmt->bind_param('si', $nova_senha_hash, $id);
         if ($stmt->execute()) {
             return true;
         } else {
