@@ -162,14 +162,14 @@ class UsuarioOngController
 
         try {
             $mail->isSMTP();
-            $mail->Host = 'smtp.example.com';
+            $mail->Host = '';
             $mail->SMTPAuth = true;
-            $mail->Username = 'seu_email@example.com';
-            $mail->Password = 'sua_senha';
+            $mail->Username = '';
+            $mail->Password = '';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
-            $mail->setFrom('seu_email@example.com', 'Amigopet');
+            $mail->setFrom('recuperarsenha@amigopet-dev.com.br', 'Amigopet');
             $mail->addAddress($email);
 
             $mail->isHTML(true);
