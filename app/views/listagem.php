@@ -30,7 +30,7 @@ if (isset($_GET['mensagem']) && $_GET['mensagem'] === 'erro') {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pets - Amigopet</title>
-    <link rel="stylesheet" href="./style/style-listagem.css" />
+    <link rel="stylesheet" href="./style/style-listagem.css?v=1.0" />
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Jomolhari&display=swap");
 
@@ -75,7 +75,7 @@ if (isset($_GET['mensagem']) && $_GET['mensagem'] === 'erro') {
     <header>
         <div class="logo">
             <a href="../../index.php">
-                <img src="./assets/logo-menor.svg" id="logo-amigopet" alt="logo amigopet" /></a>
+                <img src="./assets/logo.svg" id="logo-amigopet" alt="logo amigopet" /></a>
         </div>
     </header>
     <main>

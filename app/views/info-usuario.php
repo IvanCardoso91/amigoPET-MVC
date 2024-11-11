@@ -44,7 +44,7 @@ function formatarTelefone($telefone)
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Info Usuário - Amigopet</title>
-  <link rel="stylesheet" href="../views/style/style-info-usuario.css" />
+  <link rel="stylesheet" href="../views/style/style-info-usuario.css?v=1.0" />
   <style>
     @import url("https://fonts.googleapis.com/css2?family=Jomolhari&display=swap");
   </style>
@@ -53,7 +53,7 @@ function formatarTelefone($telefone)
 <body>
   <header>
     <a href="../../index.php">
-      <img src="../../app/views/assets/logo-menor.svg" id="logo" alt="logo amigopet" />
+      <img src="../../app/views/assets/logo.svg" id="logo" alt="logo amigopet" />
     </a>
   </header>
   <div class="container">

@@ -1,7 +1,8 @@
 <?php
 ob_start();
-session_start();
-require_once __DIR__ . '/../models/Animal.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}require_once __DIR__ . '/../models/Animal.php';
 require_once __DIR__ . '/../../config/database.php';
 
 class AnimalController

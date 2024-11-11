@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Recuperar senha - Amigopet</title>
-    <link rel="stylesheet" href="../style/style-esquece-senha.css" />
+    <link rel="stylesheet" href="./style/style-esquece-senha.css?v=1.0" />
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Jomolhari&display=swap");
     </style>
@@ -12,8 +12,8 @@
 
   <body>
     <header>
-      <a href="../html/index.html">
-        <img src="../assets/logo-menor.svg" id="logo" alt="logo amigopet" />
+      <a href="../../index.php">
+        <img src="./assets/logo.svg" id="logo" alt="logo amigopet" />
       </a>
     </header>
     <div class="form-container">
@@ -48,13 +48,13 @@
 
       span.onclick = function () {
         modal.style.display = "none";
-        window.location = "../html/login-usuario.html";
+        window.location = "./login-usuario.html";
       };
 
       window.onclick = function (event) {
         if (event.target == modal) {
           modal.style.display = "none";
-          window.location = "../html/login-usuario.html";
+          window.location = "./login-usuario.html";
         }
       };
 
