@@ -3,6 +3,10 @@ ob_start();
 session_start();
 require_once __DIR__ . '/../models/UsuarioAdotante.php';
 require_once __DIR__ . '/../../config/database.php';
+require '../../vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 class UsuarioAdotanteController
 {
@@ -135,6 +139,64 @@ class UsuarioAdotanteController
             }
         }
     }
+
+    private function gerarSenhaAleatoria($tamanho = 8)
+    {
+        return substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, $tamanho);
+    }
+
+    public function recuperarSenha()
+    {
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $email = $_POST['email'];
+
+            $usuario_adotante = $this->usuarioAdotante->getUsuarioByEmail($email);
+
+            if ($usuario_adotante) {
+                $nova_senha = $this->gerarSenhaAleatoria();
+
+                if ($this->usuarioAdotante->atualizarSenhaGeradaRandomicamente($usuario_adotante['id_usuario'], $usuario_adotante['senha'], $nova_senha)) {
+                    if ($this->enviarEmailRecuperacao($usuario_adotante['email'], $nova_senha)) {
+                        echo "Nova senha enviada ao e-mail informado.";
+                    } else {
+                        echo "Erro ao enviar o e-mail de recuperação.";
+                    }
+                } else {
+                    echo "Erro ao atualizar a senha no banco de dados.";
+                }
+            } else {
+                echo "CNPJ não encontrado.";
+            }
+        }
+    }
+
+    private function enviarEmailRecuperacao($email, $nova_senha)
+    {
+        $mail = new PHPMailer(true);
+
+        try {
+            $mail->isSMTP();
+            $mail->Host = '';
+            $mail->SMTPAuth = true;
+            $mail->Username = '';
+            $mail->Password = '';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+
+            $mail->setFrom('recuperarsenha@amigopet-dev.com.br', 'Amigopet');
+            $mail->addAddress($email);
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Recuperação de Senha';
+            $mail->Body    = "Sua nova senha de acesso para o e-mail {$email} é: <strong>{$nova_senha}</strong>";
+
+            $mail->send();
+            return true;
+        } catch (Exception $e) {
+            echo "Erro ao enviar o e-mail: {$mail->ErrorInfo}";
+            return false;
+        }
+    }
 }
 
 if (isset($_GET['action'])) {
@@ -154,6 +216,9 @@ if (isset($_GET['action'])) {
             break;
         case 'mostrar_pagina':
             $controller->mostrarPagina($_SESSION['id_usuario']);
+            break;
+        case 'recuperar_senha':
+            $controller->recuperarSenha();
             break;
         default:
             echo "Ação não reconhecida.";
