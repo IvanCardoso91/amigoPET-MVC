@@ -162,10 +162,10 @@ class UsuarioOngController
 
         try {
             $mail->isSMTP();
-            $mail->Host = 'smtp.hostinger.com';
+            $mail->Host = '';
             $mail->SMTPAuth = true;
-            $mail->Username = 'recuperarsenha@amigopet-dev.com.br';
-            $mail->Password = 'Iv@ng7h3d4f1';
+            $mail->Username = '';
+            $mail->Password = '';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
