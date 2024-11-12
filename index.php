@@ -85,9 +85,13 @@ session_start();
     <div class="menu">
         <div class="conteudo-menu">
             <h1 id="adote-ja">Adote já o seu novo <br />companheiro!</h1>
-            <div class="adote-menu">
-                <a href="./app/views/listagem.php">Adote</a>
-            </div>
+            <?php if ($_SESSION): ?>
+                <?php if ($_SESSION['user_type'] === 'adotante'): ?>
+                    <div class="adote-menu">
+                        <a href="./app/views/listagem.php">Adote</a>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
         </div>
         <div class="img-menu"><img src="./app/views/assets/img.menu.png" alt="" /></div>
     </div>
