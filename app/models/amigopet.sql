@@ -29,6 +29,16 @@ CREATE TABLE tipo_animal (
 
 INSERT INTO tipo_animal (descricao) VALUES ('Cachorro'), ('Gato');
 
+CREATE TABLE status_adocao (
+    id INT PRIMARY KEY,
+    descricao VARCHAR(50)
+);
+
+INSERT INTO status_adocao (id, descricao) VALUES
+(1, 'Disponível'),
+(2, 'Em processo'),
+(3, 'Adotado');
+
 CREATE TABLE animal (
     id_animal INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id_ong BIGINT(20) NOT NULL,
@@ -44,7 +54,8 @@ CREATE TABLE animal (
 
 ALTER TABLE animal
     ADD CONSTRAINT fk_ong FOREIGN KEY (id_ong) REFERENCES usuario_ong(id_ong) ON DELETE CASCADE,
-    ADD CONSTRAINT fk_tipo FOREIGN KEY (id_tipo) REFERENCES tipo_animal(id_tipo) ON DELETE CASCADE;
+    ADD CONSTRAINT fk_tipo FOREIGN KEY (id_tipo) REFERENCES tipo_animal(id_tipo) ON DELETE CASCADE,
+    ADD CONSTRAINT fk_usuario_adotante FOREIGN KEY (id_usuario) REFERENCES usuario_adotante(id_usuario) ON DELETE CASCADE;
 
 CREATE TABLE conversas (
     id_conversa INT AUTO_INCREMENT PRIMARY KEY,

@@ -72,6 +72,8 @@ class UsuarioOngController
         $cnpj = $cpf;
         $senha = $_POST['senha'];
 
+
+
         if ($this->usuarioOng->login($cnpj, $senha)) {
             $_SESSION['user_type'] = 'ong';
             $this->mostrarPagina($cnpj);
@@ -144,6 +146,7 @@ class UsuarioOngController
                 if ($this->usuarioOng->atualizarSenhaGeradaRandomicamente($ong['id_ong'], $ong['senha'], $nova_senha)) {
                     if ($this->enviarEmailRecuperacao($ong['email'], $nova_senha)) {
                         echo "Nova senha enviada ao e-mail vinculado ao CNPJ informado.";
+                        header("Location: ../views/info-email-ong.html");
                     } else {
                         echo "Erro ao enviar o e-mail de recuperação.";
                     }
@@ -162,10 +165,10 @@ class UsuarioOngController
 
         try {
             $mail->isSMTP();
-            $mail->Host = '';
+            $mail->Host = 'smtp.hostinger.com';
             $mail->SMTPAuth = true;
-            $mail->Username = '';
-            $mail->Password = '';
+            $mail->Username = 'recuperarsenha@amigopet-dev.com.br';
+            $mail->Password = 'Iv@ng7h3d4f1';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 

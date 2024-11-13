@@ -2,7 +2,8 @@
 ob_start();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
-}require_once __DIR__ . '/../models/Animal.php';
+}
+require_once __DIR__ . '/../models/Animal.php';
 require_once __DIR__ . '/../../config/database.php';
 
 class AnimalController
@@ -82,8 +83,17 @@ class AnimalController
             $this->animal->descricao = $_POST['descricao'];
 
             if ($this->animal->cadastrar()) {
-                echo "Animal cadastrado com sucesso!";
-                $this->mostrarPagina();
+                echo " <script type='text/javascript'>
+        showSuccessMessage('Animal cadastrado com sucesso!');
+        
+        // Após 3 segundos (3000 milissegundos), recarrega a página
+        setTimeout(function() {
+            window.location.href = ../views/info-ong.php; // Atualiza a página
+            // Ou, se você preferir, chame diretamente a função PHP:
+            // window.location.href = 'URL_DA_PAGINA_QUE_DESEJA_RECARREGAR';
+        }, 3000); // 3000 milissegundos = 3 segundos
+    </script>";
+                // $this->mostrarPagina();
             } else {
                 echo "Erro ao cadastrar o animal.";
             }

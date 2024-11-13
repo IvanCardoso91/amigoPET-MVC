@@ -1,16 +1,18 @@
 <?php
 ob_start();
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'ong') {
     header("Location: index.php?error=nao_autenticado");
     exit();
 }
-            //
-            //    if (!isset($_SESSION['todas_mensagens'])) {
-            //        $controller = new ConversaController();
-            //       $controller->mostrarTodasMensagens('id_ong');
-            //   }
+//
+//    if (!isset($_SESSION['todas_mensagens'])) {
+//        $controller = new ConversaController();
+//       $controller->mostrarTodasMensagens('id_ong');
+//   }
 
 $id_ong = $_SESSION['id_ong'] ?? null;
 $nome_fantasia = htmlspecialchars($_SESSION['nome_fantasia'] ?? null);
@@ -281,6 +283,14 @@ function formatarTelefone($telefone)
         </div>
     </div>
 
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('successModal')">&times;</span>
+            <h3>Sucesso</h3>
+            <p id="successMessage"></p>
+        </div>
+    </div>
+
     <script>
         function openModal(modalId) {
             document.getElementById(modalId).style.display = "flex";
@@ -307,6 +317,11 @@ function formatarTelefone($telefone)
             document.getElementById("descricao").value = animal.descricao;
 
             openModal('animalEditModal');
+        }
+
+        function showSuccessMessage(message) {
+            document.getElementById('successMessage').innerText = message;
+            openModal('successModal');
         }
     </script>
 </body>

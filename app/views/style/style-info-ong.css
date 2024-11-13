@@ -16,11 +16,10 @@ h4 {
 
 header {
     width: auto;
-    height: 60px;
     padding: 20px;
     background-color: #FFF9EB;
     color: #FFF9EB;
-    
+
 }
 
 .button-list {
@@ -35,7 +34,7 @@ header {
     font-weight: bold;
     line-height: 25px;
     text-decoration: none;
-    transition:  0.3s;
+    transition: 0.3s;
 }
 
 .button-list:hover {
@@ -65,6 +64,60 @@ header {
 .form-group label {
     font-weight: bold;
     color: #A0704C;
+}
+
+.form-animal {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: #FFF9EB;
+    padding: 20px;
+    border: 2px solid #A0704C;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-animal label {
+    color: #A0704C;
+    font-weight: bold;
+}
+
+.form-animal input,
+.form-animal select,
+.form-animal textarea {
+    padding: 10px;
+    border: 1px solid #A0704C;
+    border-radius: 5px;
+    background-color: #FFF9EB;
+    color: #A0704C;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.form-animal input:focus,
+.form-animal select:focus,
+.form-animal textarea:focus {
+    border-color: #8E5B42;
+}
+
+.form-animal button[type="submit"] {
+    background-color: #A0704C;
+    color: #FFF9EB;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.form-animal button[type="submit"]:hover {
+    background-color: #8E5B42;
+}
+
+textarea {
+    resize: none;
 }
 
 .buttons {
@@ -123,7 +176,73 @@ header {
     padding: 10px;
 }
 
-.chat {
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #FFF9EB;
+    border: 1px solid #A0704C;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+table th,
+table td {
+    border: 2px solid #A0704C;
+    padding: 12px;
+    text-align: left;
+    color: #A0704C;
+}
+
+table th {
+    background-color: #A0704C;
+    color: #FFF9EB;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+table tr:nth-child(even) {
+    background-color: #F5EDE1;
+}
+
+table tr:hover {
+    background-color: #E8D5B9;
+}
+
+table td a {
+    color: #A0704C;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+table td a:hover {
+    color: #8E5B42;
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: left;
+    color: #A0704C;
+}
+
+th {
+    background-color: #FFF9EB;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+tr:nth-child(even) {
+    background-color: #F7EAD5;
+    /* Alterna a cor de fundo para linhas pares */
+}
+
+tr:hover {
+    background-color: #F4E1BF;
+    /* Adiciona um efeito hover */
+}
+
+/* .chat {
     background-color: #FFF9EB;
     border: 1px solid #A0704C;
 }
@@ -142,7 +261,7 @@ header {
 
 .chat .tab-content.active {
     display: block;
-}
+} */
 
 .modal {
     display: none;
@@ -193,6 +312,22 @@ header {
     font-size: 20px;
     color: #A0704C;
     cursor: pointer;
+}
+
+#successModal .modal-content {
+    background: #FFF9EB;
+    /* Exemplo de cor */
+    color: #A0704C;
+    /* Cor do texto */
+    padding: 20px;
+    border-radius: 5px;
+    border: 2px solid #A0704C;
+}
+
+#successMessage {
+    font-size: 16px;
+    color: #A0704C;
+    text-align: center;
 }
 
 @media (max-width: 600px) {

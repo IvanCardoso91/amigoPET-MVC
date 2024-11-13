@@ -158,6 +158,7 @@ class UsuarioAdotanteController
                 if ($this->usuarioAdotante->atualizarSenhaGeradaRandomicamente($usuario_adotante['id_usuario'], $usuario_adotante['senha'], $nova_senha)) {
                     if ($this->enviarEmailRecuperacao($usuario_adotante['email'], $nova_senha)) {
                         echo "Nova senha enviada ao e-mail informado.";
+                        header("Location: ../views/info-email.html");
                     } else {
                         echo "Erro ao enviar o e-mail de recuperação.";
                     }
