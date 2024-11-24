@@ -20,31 +20,36 @@ class UsuarioAdotanteController
         $this->usuarioAdotante = new UsuarioAdotante($this->db);
     }
 
-    public function mostrarPagina($id_usuario)
+    public function mostrarPagina()
     {
         if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'adotante') {
             header("Location: ../html/index.php?error=nao_autenticado");
             exit();
         }
-
+    
+        if (!isset($_SESSION['id_usuario'])) {
+            header("Location: ../html/index.php?error=id_usuario_invalido");
+            exit();
+        }
+    
         $id_usuario = $_SESSION['id_usuario'];
-
+    
         $dados_usuario = $this->usuarioAdotante->getUsuarioById($id_usuario);
-
+    
+        if (!$dados_usuario) {
+            echo "Erro ao buscar os dados do usuário.";
+            exit();
+        }
+    
         $_SESSION['nome_completo'] = $dados_usuario['nome_completo'];
         $_SESSION['email'] = $dados_usuario['email'];
         $_SESSION['telefone'] = $dados_usuario['telefone'];
         $_SESSION['cpf'] = $dados_usuario['cpf'];
         $_SESSION['data_nascimento'] = $dados_usuario['data_nascimento'];
-
-        if ($dados_usuario === false) {
-            echo "Erro ao buscar os dados do usuário.";
-            exit();
-        }
-
+    
         header("Location: ../views/info-usuario.php?id=" . $id_usuario);
-        return $dados_usuario;
         exit();
+        // mudei essa parte pq tava dando erro amarelinho, nao conseguia chegar no exit... qlqer coisa pede pra mim o codigo que eu deixei salvo :)
     }
 
     public function cadastrar()
