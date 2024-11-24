@@ -25,6 +25,7 @@
         <form
           action="../controllers/UsuarioOngController.php?action=cadastrar_ong"
           method="POST"
+          onsubmit="return validateForm()"
         >
           <div class="caixa-input">
             <div class="div-input">
@@ -111,6 +112,23 @@
 
         e.target.value = value;
       });
+
+      function validateForm() {
+        const cpf = document.getElementById("cnpj").value.replace(/\D/g, "");
+        const telefone = document.getElementById("telefone").value.replace(/\D/g, "");
+
+        if (cpf.length !== 14) {
+          alert("CNPJ deve ter 14 dígitos.");
+          return false;
+        }
+
+        if (telefone.length !== 11) {
+          alert("Telefone deve ter 11 dígitos.");
+          return false;
+        }
+
+        return true;
+      }
     </script>
   </body>
 </html>

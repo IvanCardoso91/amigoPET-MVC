@@ -87,7 +87,7 @@ class UsuarioAdotanteController
             if ($this->usuarioAdotante->login($email, $senha)) {
                 echo "Login realizado com sucesso!";
                 // Redirecionar para a página inicial ou painel
-                $this->mostrarPagina($_SESSION['id_usuario']);
+                $this->mostrarPagina();
                 exit();
             } else {
                 echo "Email ou senha incorretos!";
@@ -113,7 +113,7 @@ class UsuarioAdotanteController
 
             if ($this->usuarioAdotante->atualizarSenha($id_usuario, $senha_atual, $nova_senha)) {
                 echo "Senha alterada com sucesso";
-                $this->mostrarPagina($_SESSION['id_usuario']);
+                $this->mostrarPagina();
             } else {
                 echo "não foi possivel alterar a senha";
             }
@@ -138,7 +138,7 @@ class UsuarioAdotanteController
                 $_SESSION['nome_completo'] = $nome_completo;
                 $_SESSION['email'] = $email;
                 echo "Dados alterados com sucesso";
-                $this->mostrarPagina($_SESSION['id_usuario']);
+                $this->mostrarPagina();
             } else {
                 echo "não foi possivel alterar os dados";
             }
@@ -221,7 +221,7 @@ if (isset($_GET['action'])) {
             $controller->atualizarDadosUsuario();
             break;
         case 'mostrar_pagina':
-            $controller->mostrarPagina($_SESSION['id_usuario']);
+            $controller->mostrarPagina();
             break;
         case 'recuperar_senha':
             $controller->recuperarSenha();

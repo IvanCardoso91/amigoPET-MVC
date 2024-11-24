@@ -26,6 +26,7 @@
         <form
           action="../controllers/UsuarioAdotanteController.php?action=cadastrar_usuario"
           method="POST"
+          onsubmit="return validateForm()"
         >
           <div class="caixa-input">
             <div>
@@ -136,6 +137,25 @@
         dateFormat: "d/m/Y",
         locale: "pt",
       });
+
+      function validateForm() {
+        const cpf = document.getElementById("cpf").value.replace(/\D/g, "");
+        const telefone = document.getElementById("telefone").value.replace(/\D/g, "");
+
+        // Validação do CPF (11 dígitos)
+        if (cpf.length !== 11) {
+          alert("CPF deve ter 11 dígitos.");
+          return false;
+        }
+
+        // Validação do Telefone (11 dígitos)
+        if (telefone.length !== 11) {
+          alert("Telefone deve ter 11 dígitos.");
+          return false;
+        }
+
+        return true;
+      }
     </script>
   </body>
 </html>
