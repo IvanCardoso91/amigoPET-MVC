@@ -59,30 +59,22 @@ class UsuarioAdotante
     }
     public function login($email, $senha)
     {
-        // Query para buscar o usuário pelo email
         $query = "SELECT nome_completo, senha, id_usuario FROM " . $this->table_name . " WHERE email = ? LIMIT 1";
 
-        // Prepara a query
         $stmt = $this->conn->prepare($query);
 
         if ($stmt === false) {
-            echo "Erro na preparação da query: " . $this->conn->error;
-            return false;
+            return ['status' => false, 'message' => "Erro interno no sistema. Por favor, tente novamente mais tarde." . $this->conn->error];
         }
 
-        // Limpa os dados recebidos
         $email = htmlspecialchars(strip_tags($email));
 
-        // Liga o parâmetro à query
         $stmt->bind_param('s', $email);
 
-        // Executa a query
         $stmt->execute();
 
-        // Obtém o resultado
         $result = $stmt->get_result();
 
-        // Verifica se encontrou algum usuário com o email fornecido
         if ($result->num_rows > 0) {
 
             $row = $result->fetch_assoc();
@@ -90,12 +82,9 @@ class UsuarioAdotante
             $this->nome_completo = $row['nome_completo'];
             $hashed_password = $row['senha'];
 
-            // Liga as colunas do resultado aos atributos
             $stmt->bind_result($this->nome_completo, $hashed_password, $this->id);
 
-            // Verifica se a senha informada corresponde à senha criptografada armazenada
             if (password_verify($senha, $hashed_password)) {
-                // Se a senha estiver correta, inicia uma sessão e armazena as informações do usuário
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
                 }
@@ -103,14 +92,14 @@ class UsuarioAdotante
                 $_SESSION['nome_completo'] = $this->nome_completo;
                 $_SESSION['email'] = $email;
                 $_SESSION['id_usuario'] = $this->id;
-                return true;
+                return ['status' => true];
             } else {
                 // Senha incorreta
-                return false;
+                return ['status' => false, 'message' => "Senha incorreta. Por favor, tente novamente."];
             }
         } else {
             // Usuário não encontrado
-            return false;
+            return ['status' => false, 'message' => "Usuário não encontrado. Verifique o e-mail digitado."];
         }
     }
 

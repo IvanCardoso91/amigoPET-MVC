@@ -3,7 +3,7 @@ ob_start();
 session_start();
 // views/info-usuario.php
 if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'adotante') {
-  header("Location: index.php?error=nao_autenticado");
+  header("Location: ../../app/views/erro-autenticacao.html");
   exit();
 }
 
@@ -96,7 +96,8 @@ function formatarTelefone($telefone)
     <div class="modal-content">
       <button class="close" onclick="closePasswordModal()">×</button>
       <h3>Redefinir Senha</h3>
-      <form action="../../app/controllers/UsuarioAdotanteController.php?action=atualizar_senha_usuario" method="POST">
+      <form action="../../app/controllers/UsuarioAdotanteController.php?action=atualizar_senha_usuario"
+        method="POST">
         <label for="current-password">Senha Atual:</label>
         <input type="password" id="current-password" name="current-password" required />
         <label for="new-password">Nova Senha:</label>
@@ -112,7 +113,8 @@ function formatarTelefone($telefone)
     <div class="modal-content">
       <button class="close" onclick="closeEditModal()">×</button>
       <h3>Editar Informações do Usuário</h3>
-      <form action="../../app/controllers/UsuarioAdotanteController.php?action=atualizar_dados_usuario" method="POST">
+      <form action="../../app/controllers/UsuarioAdotanteController.php?action=atualizar_dados_usuario"
+        method="POST">
         <label for="edit-email">E-mail do Usuário:</label>
         <input type="email" id="edit-email" name="email" value="<?php echo $email; ?>" required />
         <label for="edit-contact">Número para Contato:</label>

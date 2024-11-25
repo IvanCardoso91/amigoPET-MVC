@@ -67,8 +67,8 @@ session_start();
             <span class="close-popup-btn" id="close-popup-login-btn">&times;</span>
             <h2>ATENÇÃO</h2>
             <p>Selecione o login desejado abaixo</p>
-            <a href="./app/views/login-usuario.html" class="close-btn">Login adotante</a>
-            <a href="./app/views/login-ong.html" class="close-btn">Login ONG</a>
+            <a href="./app/views/login-usuario.php" class="close-btn">Login adotante</a>
+            <a href="./app/views/login-ong.php" class="close-btn">Login ONG</a>
         </div>
     </div>
 

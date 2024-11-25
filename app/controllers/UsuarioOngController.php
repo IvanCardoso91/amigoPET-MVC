@@ -27,7 +27,7 @@ class UsuarioOngController
     public function mostrarPagina($cnpj)
     {
         if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'ong') {
-            header("Location: ../html/index.php?error=nao_autenticado");
+            header("Location: ../../views/erro-autenticacao.html");
             exit();
         }
 
@@ -72,13 +72,18 @@ class UsuarioOngController
         $cnpj = $cpf;
         $senha = $_POST['senha'];
 
+        $loginResult = $this->usuarioOng->login($cnpj, $senha);
 
-
-        if ($this->usuarioOng->login($cnpj, $senha)) {
+        if ($loginResult['status']) {
             $_SESSION['user_type'] = 'ong';
             $this->mostrarPagina($cnpj);
         } else {
-            echo "Erro ao fazer login.";
+            // Salva a mensagem de erro na sessão
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            $_SESSION['login_error'] = $loginResult['message'];
+            header("Location: ../views/login-ong.php");
             exit();
         }
     }
@@ -86,7 +91,7 @@ class UsuarioOngController
     public function atualizarSenha()
     {
         if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'ong') {
-            header("Location: ../html/index.php?error=nao_autenticado");
+            header("Location: ../../views/erro-autenticacao.html");
             exit();
         }
 
@@ -107,7 +112,7 @@ class UsuarioOngController
     public function atualizarDadosUsuario()
     {
         if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'ong') {
-            header("Location: ../html/index.php?error=nao_autenticado");
+            header("Location: ../../views/erro-autenticacao.html");
             exit();
         }
 

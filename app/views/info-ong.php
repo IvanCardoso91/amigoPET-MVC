@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'ong') {
-    header("Location: index.php?error=nao_autenticado");
+    header("Location: ../../app/views/erro-autenticacao.html");
     exit();
 }
 //
@@ -81,8 +81,6 @@ function formatarTelefone($telefone)
         </a>
     </header>
     <div class="container">
-        <a class="button-list" href="../views/listagem.php">Veja os animais</a>
-        <!-- Primeiro Bloco -->
         <div class="block">
             <h2>Informações da Ong</h2>
             <?php if ($mensagem_sucesso): ?>

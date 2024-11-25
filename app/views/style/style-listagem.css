@@ -16,7 +16,6 @@ h4 {
 
 header {
     width: auto;
-    height: 60px;
     padding: 20px;
     background-color: #FFF9EB;
     color: #FFF9EB;
@@ -43,7 +42,8 @@ header {
 
 .container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     gap: 20px;
     padding: 20px;
 }
@@ -117,30 +117,8 @@ header {
     margin-left: 10px;
 }
 
-.animal-list,
-.chat {
+.animal-list {
     padding: 10px;
-}
-
-.chat {
-    background-color: #FFF9EB;
-    border: 1px solid #A0704C;
-}
-
-.chat .tabs {
-    display: flex;
-    gap: 10px;
-}
-
-.chat .tab-content {
-    border: 1px solid #A0704C;
-    padding: 10px;
-    display: none;
-    background-color: #FFF9EB;
-}
-
-.chat .tab-content.active {
-    display: block;
 }
 
 .modal {

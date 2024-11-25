@@ -1,13 +1,14 @@
-body{
+body {
     background-color: #FFF9EB;
 
 }
 
-.logo{
+.logo {
     display: flex;
     justify-content: center;
-    padding-bottom: 10px ;
+    padding-bottom: 10px;
 }
+
 .frase {
     width: auto;
     height: 0;
@@ -16,7 +17,7 @@ body{
 
 .login-titulo {
     display: flex;
-    color:  #EFDCAE;
+    color: #EFDCAE;
     justify-content: center;
     margin: 5px;
     padding-bottom: 10px;
@@ -90,10 +91,19 @@ body{
 }
 
 #submit-button:hover {
-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5)
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5)
 }
 
 #logo {
     height: 4rem;
     width: 15rem;
+}
+
+.error-message {
+    color: red;
+    background-color: #ffe6e6;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
 }

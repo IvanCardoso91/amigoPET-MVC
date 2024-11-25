@@ -3,7 +3,7 @@ ob_start();
 session_start();
 
 if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'adotante') {
-    header("Location: index.php?error=nao_autenticado");
+    header("Location: ../../app/views/erro-autenticacao.html");
     exit();
 }
 

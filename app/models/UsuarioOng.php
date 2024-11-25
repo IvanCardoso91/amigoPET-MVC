@@ -56,42 +56,26 @@ class UsuarioOng
     }
     public function login($cnpj, $senha)
     {
-        // Query para buscar o usuário pelo cnpj e email
         $query = "SELECT nome_fantasia, email, senha, telefone, cnpj, data_cadastro, id_ong FROM " . $this->table_name . " WHERE cnpj = ? LIMIT 1";
 
-        // Prepara a query
         $stmt = $this->conn->prepare($query);
 
         if ($stmt === false) {
-            echo "Erro na preparação da query: " . $this->conn->error;
-            return false;
+            return ['status' => false, 'message' => "Erro interno no sistema. Por favor, tente novamente mais tarde." . $this->conn->error];
         }
 
-        // Limpa os dados recebidos
         $cnpj = htmlspecialchars(strip_tags($cnpj));
-
-        // Liga os parâmetros à query
         $stmt->bind_param('s', $cnpj);
-
-        // Executa a query
         $stmt->execute();
-
-        // Obtém o resultado
         $result = $stmt->get_result();
 
-
-        // Verifica se encontrou algum usuário com o cnpj e email fornecidos
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             $this->id = $row['id_ong'];
             $this->nome_fantasia = $row['nome_fantasia'];
             $hashed_password = $row['senha'];
 
-
-            // Verifica se a senha informada corresponde à senha criptografada armazenada
             if (password_verify($senha, $hashed_password)) {
-
-                // Se a senha estiver correta, inicia uma sessão e armazena as informações do usuário
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
                 }
@@ -103,16 +87,12 @@ class UsuarioOng
                 $_SESSION['cnpj'] = $this->cnpj;
                 $_SESSION['data_cadastro'] = $this->data_cadastro;
 
-                return true;
+                return ['status' => true];
             } else {
-                // Senha incorreta
-                echo "senha incorreta";
-                return false;
+                return ['status' => false, 'message' => "Senha incorreta. Por favor, tente novamente."];
             }
         } else {
-            // Usuário não encontrado
-            echo "usuario nao encontrado";
-            return false;
+            return ['status' => false, 'message' => "Usuário não encontrado. Verifique o CNPJ digitado."];
         }
     }
 

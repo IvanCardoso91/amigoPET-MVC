@@ -20,36 +20,31 @@ class UsuarioAdotanteController
         $this->usuarioAdotante = new UsuarioAdotante($this->db);
     }
 
-    public function mostrarPagina()
+    public function mostrarPagina($id_usuario)
     {
         if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'adotante') {
-            header("Location: ../html/index.php?error=nao_autenticado");
+            header("Location: ../../views/erro-autenticacao.html");
             exit();
         }
-    
-        if (!isset($_SESSION['id_usuario'])) {
-            header("Location: ../html/index.php?error=id_usuario_invalido");
-            exit();
-        }
-    
+
         $id_usuario = $_SESSION['id_usuario'];
-    
+
         $dados_usuario = $this->usuarioAdotante->getUsuarioById($id_usuario);
-    
-        if (!$dados_usuario) {
-            echo "Erro ao buscar os dados do usuário.";
-            exit();
-        }
-    
+
         $_SESSION['nome_completo'] = $dados_usuario['nome_completo'];
         $_SESSION['email'] = $dados_usuario['email'];
         $_SESSION['telefone'] = $dados_usuario['telefone'];
         $_SESSION['cpf'] = $dados_usuario['cpf'];
         $_SESSION['data_nascimento'] = $dados_usuario['data_nascimento'];
-    
+
+        if ($dados_usuario === false) {
+            echo "Erro ao buscar os dados do usuário.";
+            exit();
+        }
+
         header("Location: ../views/info-usuario.php?id=" . $id_usuario);
+        return $dados_usuario;
         exit();
-        // mudei essa parte pq tava dando erro amarelinho, nao conseguia chegar no exit... qlqer coisa pede pra mim o codigo que eu deixei salvo :)
     }
 
     public function cadastrar()
@@ -77,24 +72,23 @@ class UsuarioAdotanteController
 
     public function login()
     {
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-            // Captura os dados do formulário de login
-            $email = $_POST['email'];
-            $senha = $_POST['senha'];
+        $email = $_POST['email'];
+        $senha = $_POST['senha'];
 
-            // Verifica se o login foi bem-sucedido
-            if ($this->usuarioAdotante->login($email, $senha)) {
-                echo "Login realizado com sucesso!";
-                // Redirecionar para a página inicial ou painel
-                $this->mostrarPagina();
-                exit();
-            } else {
-                echo "Email ou senha incorretos!";
-                // Exibir mensagem de erro ou redirecionar para a página de login novamente
+        $loginResult = $this->usuarioAdotante->login($email, $senha);
 
-                exit();
+        if ($loginResult['status']) {
+            $_SESSION['user_type'] = 'adotante';
+            $this->mostrarPagina($_SESSION['id_usuario']);
+        } else {
+            // Salva a mensagem de erro na sessão
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
             }
+            $_SESSION['login_error'] = $loginResult['message'];
+            header("Location: ../views/login-usuario.php");
+            exit();
         }
     }
 
@@ -102,7 +96,7 @@ class UsuarioAdotanteController
     {
         session_start();
         if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'adotante') {
-            header("Location: ../html/index.php?error=nao_autenticado");
+            header("Location: ../../views/erro-autenticacao.html");
             exit();
         }
 
@@ -113,7 +107,7 @@ class UsuarioAdotanteController
 
             if ($this->usuarioAdotante->atualizarSenha($id_usuario, $senha_atual, $nova_senha)) {
                 echo "Senha alterada com sucesso";
-                $this->mostrarPagina();
+                $this->mostrarPagina($_SESSION['id_usuario']);
             } else {
                 echo "não foi possivel alterar a senha";
             }
@@ -124,7 +118,7 @@ class UsuarioAdotanteController
     {
         session_start();
         if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'adotante') {
-            header("Location: ../html/index.php?error=nao_autenticado");
+            header("Location: ../../views/erro-autenticacao.html");
             exit();
         }
 
@@ -138,7 +132,7 @@ class UsuarioAdotanteController
                 $_SESSION['nome_completo'] = $nome_completo;
                 $_SESSION['email'] = $email;
                 echo "Dados alterados com sucesso";
-                $this->mostrarPagina();
+                $this->mostrarPagina($_SESSION['id_usuario']);
             } else {
                 echo "não foi possivel alterar os dados";
             }
@@ -221,7 +215,7 @@ if (isset($_GET['action'])) {
             $controller->atualizarDadosUsuario();
             break;
         case 'mostrar_pagina':
-            $controller->mostrarPagina();
+            $controller->mostrarPagina($_SESSION['id_usuario']);
             break;
         case 'recuperar_senha':
             $controller->recuperarSenha();
