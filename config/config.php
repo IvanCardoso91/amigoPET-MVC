@@ -8,4 +8,10 @@ return [
         'from_email' => 'recuperarsenha@amigopet-dev.com.br',
         'from_name' => 'Amigopet',
     ],
+    'database' => [
+        'host' => 'amigopet-dev.com.br',
+        'db_name' => 'u304006048_amigopet',
+        'username' => 'u304006048_amigopetuser',
+        'password' => 'Gzdc~dm7|4',
+    ],
 ];

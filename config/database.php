@@ -3,11 +3,21 @@
 
 class Database
 {
-    private $host = "amigopet-dev.com.br";
-    private $db_name = "u304006048_amigopet";
-    private $username = "u304006048_amigopetuser";
-    private $password = "Gzdc~dm7|4";
+    private $host;
+    private $db_name;
+    private $username;
+    private $password;
     public $conn;
+
+    public function __construct()
+    {
+        $config = require __DIR__ . './config.php';
+
+        $this->host = $config['database']['host'];
+        $this->db_name = $config['database']['db_name'];
+        $this->username = $config['database']['username'];
+        $this->password = $config['database']['password'];
+    }
 
     public function getConnection()
     {
