@@ -13,28 +13,6 @@ $telefone = htmlspecialchars($_SESSION['telefone']);
 $cpf = htmlspecialchars($_SESSION['cpf']);
 $data_nascimento = htmlspecialchars($_SESSION['data_nascimento']);
 
-function formatarCpf($cpf)
-{
-  // Remove qualquer caractere que não seja número
-  $cpf = preg_replace('/\D/', '', $cpf);
-
-  // Verifica se o CPF tem 11 dígitos e aplica a máscara
-  if (strlen($cpf) === 11) {
-    return preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $cpf);
-  }
-  // Retorna o CPF sem máscara caso tenha tamanho diferente
-  return $cpf;
-}
-function formatarTelefone($telefone)
-{
-  $telefone = preg_replace('/\D/', '', $telefone);
-  if (strlen($telefone) === 10) {
-    return preg_replace('/(\d{2})(\d{4})(\d{4})/', '($1) $2-$3', $telefone);
-  } elseif (strlen($telefone) === 11) {
-    return preg_replace('/(\d{2})(\d{5})(\d{4})/', '($1) $2-$3', $telefone);
-  }
-  return $telefone;
-}
 
 ?>
 <!DOCTYPE html>
@@ -68,7 +46,7 @@ function formatarTelefone($telefone)
         </div>
         <div>
           <label>Telefone:</label>
-          <span><?php echo formatarTelefone($telefone); ?></span>
+          <span id="telefone"><?php echo $telefone; ?></span>
         </div>
         <div>
           <label>Nome Completo:</label>
@@ -76,7 +54,7 @@ function formatarTelefone($telefone)
         </div>
         <div>
           <label>CPF:</label>
-          <span><?php echo formatarCpf($cpf); ?></span>
+          <span id="cpf"><?php echo $cpf; ?></span>
         </div>
       </div>
       <div class="buttons">
@@ -129,6 +107,12 @@ function formatarTelefone($telefone)
   </div>
 
   <script>
+    const cpfElement = document.getElementById('cpf');
+    const telefoneElement = document.getElementById('telefone');
+
+    cnpjElement.textContent = formatarCpf(cnpjElement.textContent);
+    telefoneElement.textContent = formatarTelefone(telefoneElement.textContent);
+
     function openPasswordModal() {
       document.getElementById("passwordModal").style.display = "flex";
     }
@@ -152,8 +136,23 @@ function formatarTelefone($telefone)
       document.getElementById(`tab${tabIndex}`).classList.add("active");
     }
 
-    // Default to showing the first tab
-    showTab(1);
+    function formatarTelefone(telefone) {
+      telefone = telefone.replace(/\D/g, '');
+      if (telefone.length === 10) {
+        return telefone.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
+      } else if (telefone.length === 11) {
+        return telefone.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+      }
+      return telefone;
+    }
+
+    function formatarCpf(cpf) {
+      cpf = cpf.replace(/\D/g, '');
+      if (cpf.length === 11) {
+        return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+      }
+      return cpf;
+    }
   </script>
 </body>
 

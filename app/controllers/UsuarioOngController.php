@@ -224,7 +224,7 @@ class UsuarioOngController
                             line-height: 1.6;
                         }
                         .body strong {
-                            color: #FFF9EB;
+                            color: rgba(0, 0, 0, 0.5);
                             background-color: #EFDCAE;
                             padding: 5px 10px;
                             border-radius: 5px;

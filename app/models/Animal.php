@@ -15,6 +15,7 @@ class Animal
     public $sexo;      // Sexo do animal
     public $descricao; // Descrição do animal
     public $imagem; // imagem do animal
+    public $status_adocao;
 
     public function __construct($db)
     {
@@ -24,8 +25,8 @@ class Animal
     public function cadastrar()
     {
         $query = "INSERT INTO " . $this->table_name . " 
-              (id_ong, id_tipo, raca, peso, idade, porte, sexo, descricao, imagem) 
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+          (id_ong, id_tipo, raca, peso, idade, porte, sexo, descricao, imagem, status_adocao) 
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $this->conn->prepare($query);
 
@@ -43,9 +44,10 @@ class Animal
         $this->sexo = htmlspecialchars(strip_tags($this->sexo));
         $this->descricao = htmlspecialchars(strip_tags($this->descricao));
         $this->imagem = htmlspecialchars(strip_tags($this->imagem));
+        $statusAdocao = 1;
 
         $stmt->bind_param(
-            'iisisssss',
+            'iisisssssi',
             $this->id_ong,
             $this->id_tipo,
             $this->raca,
@@ -54,7 +56,8 @@ class Animal
             $this->porte,
             $this->sexo,
             $this->descricao,
-            $this->imagem
+            $this->imagem,
+            $statusAdocao
         );
 
         if ($stmt->execute()) {
@@ -67,12 +70,34 @@ class Animal
 
     public function buscarAnimaisPorOng($id_ong)
     {
-        $query = "SELECT * FROM " . $this->table_name . " WHERE id_ong = " . $id_ong;
+        $query = "SELECT 
+                animal.*,
+                status_adocao.descricao AS status_adocao,
+                usuario_adotante.nome_completo AS nome_adotante,
+                usuario_adotante.data_nascimento,
+                usuario_adotante.email,
+                usuario_adotante.telefone
+              FROM 
+                animal
+              LEFT JOIN 
+                status_adocao 
+                ON animal.status_adocao = status_adocao.id
+              LEFT JOIN 
+                usuario_adotante 
+                ON animal.id_usuario = usuario_adotante.id_usuario
+              WHERE 
+                animal.id_ong = ?";
+
         $stmt = $this->conn->prepare($query);
+        if ($stmt === false) {
+            echo "Erro na preparação da query: " . $this->conn->error;
+            return false;
+        }
+
+        $stmt->bind_param('i', $id_ong);
         $stmt->execute();
         $result = $stmt->get_result();
 
-        // Retorna os dados dos animais como um array
         $animais = [];
         while ($row = $result->fetch_assoc()) {
             $animais[] = $row;
@@ -104,8 +129,8 @@ class Animal
     public function editarAnimal()
     {
         $query = "UPDATE " . $this->table_name . " 
-                  SET raca = ?, peso = ?, idade = ?, porte = ?, descricao = ?, imagem = ?
-                  WHERE id_animal = ?";
+              SET raca = ?, peso = ?, idade = ?, porte = ?, descricao = ?, imagem = ?, status_adocao = ?
+              WHERE id_animal = ?";
 
         $stmt = $this->conn->prepare($query);
 
@@ -120,16 +145,18 @@ class Animal
         $this->porte = htmlspecialchars(strip_tags($this->porte));
         $this->descricao = htmlspecialchars(strip_tags($this->descricao));
         $this->imagem = htmlspecialchars(strip_tags($this->imagem));
+        $this->status_adocao = htmlspecialchars(strip_tags($this->status_adocao));
         $this->id_animal = htmlspecialchars(strip_tags($this->id_animal));
 
         $stmt->bind_param(
-            'ssisssi',
+            'ssisssii',
             $this->raca,
             $this->peso,
             $this->idade,
             $this->porte,
             $this->descricao,
             $this->imagem,
+            $this->status_adocao,
             $this->id_animal
         );
 

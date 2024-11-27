@@ -4,6 +4,13 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+require_once '../controllers/AnimalController.php';
+
+if (empty($_SESSION['animais'])) {
+    $animalController = new AnimalController();
+    $animalController->mostrarPagina();
+}
+
 if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'ong') {
     header("Location: ../../app/views/erro-autenticacao.html");
     exit();
@@ -41,25 +48,6 @@ if (isset($_GET['error'])) {
     }
 }
 
-function formatarCnpj($cnpj)
-{
-    $cnpj = preg_replace('/\D/', '', $cnpj);
-    if (strlen($cnpj) === 14) {
-        return preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $cnpj);
-    }
-    return $cnpj;
-}
-function formatarTelefone($telefone)
-{
-    $telefone = preg_replace('/\D/', '', $telefone);
-    if (strlen($telefone) === 10) {
-        return preg_replace('/(\d{2})(\d{4})(\d{4})/', '($1) $2-$3', $telefone);
-    } elseif (strlen($telefone) === 11) {
-        return preg_replace('/(\d{2})(\d{5})(\d{4})/', '($1) $2-$3', $telefone);
-    }
-    return $telefone;
-}
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -92,7 +80,7 @@ function formatarTelefone($telefone)
             <div class="form-group">
                 <div>
                     <label>CNPJ:</label>
-                    <span><?php echo formatarCnpj($cnpj); ?></span>
+                    <span id="cnpj"><?php echo $cnpj; ?></span>
                 </div>
                 <div>
                     <label>E-mail da Ong:</label>
@@ -100,7 +88,7 @@ function formatarTelefone($telefone)
                 </div>
                 <div>
                     <label>Telefone:</label>
-                    <span><?php echo formatarTelefone($telefone); ?></span>
+                    <span id="telefone"><?php echo $telefone; ?></span>
                 </div>
                 <div>
                     <label>Nome Fantasia:</label>
@@ -177,6 +165,9 @@ function formatarTelefone($telefone)
                         <th>Porte</th>
                         <th>Sexo</th>
                         <th>Descrição</th>
+                        <th>Status</th>
+                        <th>Adotante</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -191,6 +182,21 @@ function formatarTelefone($telefone)
                                 <td><?php echo ucfirst($animal['porte']); ?></td>
                                 <td><?php echo $animal['sexo'] == 1 ? 'Macho' : 'Fêmea'; ?></td>
                                 <td><?php echo $animal['descricao']; ?></td>
+                                <td><?php echo $animal['status_adocao']; ?></td>
+                                <td>
+                                    <?php if (!empty($animal['nome_adotante'])): ?>
+                                        <button onclick="openAdotanteModal('<?php echo htmlspecialchars(json_encode([
+                                                                                'nome_completo' => $animal['nome_adotante'],
+                                                                                'data_nascimento' => $animal['data_nascimento'],
+                                                                                'email' => $animal['email'],
+                                                                                'telefone' => $animal['telefone'],
+                                                                            ])); ?>')">
+                                            <?php echo $animal['nome_adotante']; ?>
+                                        </button>
+                                    <?php else: ?>
+                                        Sem adotante
+                                    <?php endif; ?>
+                                </td>
                                 <td>
                                     <a href="#"
                                         onclick="openModalEditAnimal(<?php echo htmlspecialchars(json_encode($animal)); ?>)">Editar</a>
@@ -200,12 +206,13 @@ function formatarTelefone($telefone)
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="9">Nenhum animal cadastrado.</td>
+                            <td colspan="11">Nenhum animal cadastrado.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
         </div>
+
     </div>
 
     <!-- Modals -->
@@ -251,19 +258,26 @@ function formatarTelefone($telefone)
                 enctype="multipart/form-data">
                 <input type="hidden" id="id_animal" name="id_animal">
                 <label for="raca">Raça:</label>
-                <input type="text" id="raca" name="raca" value="<?php echo $animal['raca'] ?>" required>
+                <input type="text" id="raca" name="raca" required>
                 <label for="peso">Peso:</label>
-                <input type="text" id="peso" name="peso" value="<?php echo $animal['peso']; ?>" required>
+                <input type="text" id="peso" name="peso" required>
                 <label for="idade">Idade:</label>
-                <input type="text" id="idade" name="idade" value="<?php echo $animal['idade']; ?>" required>
+                <input type="text" id="idade" name="idade" required>
                 <label for="porte">Porte:</label>
-                <input type="text" id="porte" name="porte" value="<?php echo $animal['porte']; ?>" required>
-                <label for="sexo">Sexo:</label>
+                <input type="text" id="porte" name="porte" required>
                 <label for="descricao">Descrição:</label>
-                <textarea id="descricao" name="descricao" value="<?php echo $animal['descricao']; ?>"></textarea>
+                <textarea id="descricao" name="descricao"></textarea>
                 <label for="imagem">Imagem:</label>
                 <input type="file" id="imagem" name="imagem">
                 <input type="hidden" id="imagem_atual" name="imagem_atual">
+
+                <label for="status_adocao">Status da Adoção:</label>
+                <select id="status_adocao" name="status_adocao">
+                    <option value="1">Disponível</option>
+                    <option value="2">Em Processo</option>
+                    <option value="3">Adotado</option>
+                </select>
+
                 <button type="submit">Salvar Alterações</button>
             </form>
         </div>
@@ -289,7 +303,24 @@ function formatarTelefone($telefone)
         </div>
     </div>
 
+    <div id="adotanteModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAdotanteModal()">&times;</span>
+            <h2>Dados do Adotante</h2>
+            <p><strong>Nome:</strong> <span id="adotanteNome"></span></p>
+            <p><strong>Data de Nascimento:</strong> <span id="adotanteNascimento"></span></p>
+            <p><strong>Email:</strong> <span id="adotanteEmail"></span></p>
+            <p><strong>Telefone:</strong> <span id="adotanteTelefone"></span></p>
+        </div>
+    </div>
+
     <script>
+        const cnpjElement = document.getElementById('cnpj');
+        const telefoneElement = document.getElementById('telefone');
+
+        cnpjElement.textContent = formatarCnpj(cnpjElement.textContent);
+        telefoneElement.textContent = formatarTelefone(telefoneElement.textContent);
+
         function openModal(modalId) {
             document.getElementById(modalId).style.display = "flex";
         }
@@ -313,6 +344,7 @@ function formatarTelefone($telefone)
             document.getElementById("porte").value = animal.porte;
             document.getElementById("sexo").value = animal.sexo;
             document.getElementById("descricao").value = animal.descricao;
+            document.getElementById('status_adocao').value = animal.status_adocao;
 
             openModal('animalEditModal');
         }
@@ -320,6 +352,39 @@ function formatarTelefone($telefone)
         function showSuccessMessage(message) {
             document.getElementById('successMessage').innerText = message;
             openModal('successModal');
+        }
+
+        function openAdotanteModal(adotanteData) {
+            const adotante = JSON.parse(adotanteData);
+
+            document.getElementById('adotanteNome').textContent = adotante.nome_completo;
+            document.getElementById('adotanteNascimento').textContent = adotante.data_nascimento || 'Não informado';
+            document.getElementById('adotanteEmail').textContent = adotante.email || 'Não informado';
+            document.getElementById('adotanteTelefone').textContent = adotante.telefone || 'Não informado';
+
+            openModal('adotanteModal');
+        }
+
+        function closeAdotanteModal() {
+            closeModal('adotanteModal');
+        }
+
+        function formatarTelefone(telefone) {
+            telefone = telefone.replace(/\D/g, '');
+            if (telefone.length === 10) {
+                return telefone.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
+            } else if (telefone.length === 11) {
+                return telefone.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+            }
+            return telefone;
+        }
+
+        function formatarCnpj(cnpj) {
+            cnpj = cnpj.replace(/\D/g, '');
+            if (cnpj.length === 14) {
+                return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
+            }
+            return cnpj;
         }
     </script>
 </body>

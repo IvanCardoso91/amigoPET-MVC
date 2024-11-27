@@ -31,9 +31,6 @@ class AnimalController
         }
 
         $_SESSION['animais'] = $animais;
-
-        // Incluir a view para exibir os animais
-        include '../views/info-ong.php';
     }
 
     public function mostrarTodosAnimais()
@@ -100,6 +97,7 @@ class AnimalController
             $this->animal->idade = $_POST['idade'];
             $this->animal->porte = $_POST['porte'];
             $this->animal->descricao = $_POST['descricao'];
+            $this->animal->status_adocao = $_POST['status_adocao'];
 
             // Verifica se foi feito upload de nova imagem
             if (isset($_FILES['imagem']) && $_FILES['imagem']['size'] > 0) {
