@@ -4,9 +4,9 @@
 class Database
 {
     private $host = "amigopet-dev.com.br";
-    private $db_name = "u304006048_amigopetdb";
-    private $username = "u304006048_amigopetdbuser";
-    private $password = "Iv@ng7h3d4f1";
+    private $db_name = "u304006048_amigopet";
+    private $username = "u304006048_amigopetuser";
+    private $password = "Gzdc~dm7|4";
     public $conn;
 
     public function getConnection()
