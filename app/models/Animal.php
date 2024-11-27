@@ -215,4 +215,29 @@ class Animal
             return false;
         }
     }
+
+    public function getAnimaisAdotante($id_usuario)
+    {
+        $query = "SELECT a.*, uo.nome_fantasia AS empresa, sa.descricao AS status_adocao
+              FROM animal a
+              INNER JOIN usuario_ong uo ON a.id_ong = uo.id_ong
+              INNER JOIN status_adocao sa ON a.status_adocao = sa.id
+              WHERE a.id_usuario = ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        if ($stmt === false) {
+            die("Erro na preparação da query: " . $this->conn->error);
+        }
+
+        $stmt->bind_param('i', $id_usuario);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $animais = [];
+        while ($row = $result->fetch_assoc()) {
+            $animais[] = $row;
+        }
+        return $animais;
+    }
 }

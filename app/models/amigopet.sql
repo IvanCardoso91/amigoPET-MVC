@@ -46,7 +46,7 @@ CREATE TABLE animal (
     status_adocao INT NOT NULL,
     id_usuario BIGINT(20) DEFAULT NULL,
     raca VARCHAR(80) NOT NULL,
-    peso FLOAT(3,2) NOT NULL,
+    peso FLOAT(5,2) NOT NULL,
     idade INT NOT NULL,
     porte VARCHAR(7) NOT NULL,
     sexo INT(1) NOT NULL,

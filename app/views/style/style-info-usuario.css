@@ -194,6 +194,76 @@ header {
     cursor: pointer;
 }
 
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #FFF9EB;
+    border: 1px solid #A0704C;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+table th,
+table td {
+    border: 2px solid #A0704C;
+    padding: 12px;
+    text-align: left;
+    color: #A0704C;
+}
+
+table th {
+    background-color: #A0704C;
+    color: #FFF9EB;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+table tr:nth-child(even) {
+    background-color: #F5EDE1;
+}
+
+table tr:hover {
+    background-color: #E8D5B9;
+}
+
+table td a {
+    color: #A0704C;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+table td a:hover {
+    color: #8E5B42;
+}
+
+.status-tag {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 0.9em;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+}
+
+.status-tag.disponível {
+    background-color: #007BFF;
+}
+
+.status-tag.em-processo {
+    background-color: #FFC107;
+    color: #000;
+}
+
+.status-tag.adotado {
+    background-color: #DC3545;
+}
+
+.block h2 {
+    margin-top: 40px;
+}
+
 @media (max-width: 600px) {
     .container {
         padding: 10px;

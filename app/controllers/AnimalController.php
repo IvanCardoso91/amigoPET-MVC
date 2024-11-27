@@ -91,12 +91,12 @@ class AnimalController
     public function editarAnimal()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->animal->id_animal = $_POST['id_animal'];
-            $this->animal->raca = $_POST['raca'];
-            $this->animal->peso = $_POST['peso'];
-            $this->animal->idade = $_POST['idade'];
-            $this->animal->porte = $_POST['porte'];
-            $this->animal->descricao = $_POST['descricao'];
+            $this->animal->id_animal = $_POST['edit_id_animal'];
+            $this->animal->raca = $_POST['edit_raca'];
+            $this->animal->peso = $_POST['edit_peso'];
+            $this->animal->idade = $_POST['edit_idade'];
+            $this->animal->porte = $_POST['edit_porte'];
+            $this->animal->descricao = $_POST['edit_descricao'];
             $this->animal->status_adocao = $_POST['status_adocao'];
 
             // Verifica se foi feito upload de nova imagem
@@ -119,6 +119,7 @@ class AnimalController
             if ($this->animal->editarAnimal()) {
                 echo "Animal atualizado com sucesso!";
                 $this->mostrarPagina();
+                header("Location: ../views/info-ong.php");
             } else {
                 echo "Erro ao atualizar o animal.";
             }
@@ -155,6 +156,23 @@ class AnimalController
             }
             exit();
         }
+    }
+
+    public function getAnimaisAdotante()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (!isset($_SESSION['id_usuario'])) {
+            header("Location: ../../app/views/erro-autenticacao.html");
+            exit();
+        }
+
+        $id_usuario = $_SESSION['id_usuario'];
+        $animais = $this->animal->getAnimaisAdotante($id_usuario);
+
+        return $animais;
     }
 }
 

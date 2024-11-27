@@ -202,10 +202,11 @@ if (isset($_GET['error'])) {
                                         Sem adotante
                                     <?php endif; ?>
                                 </td>
-                                <td>
-                                    <a href="#"
-                                        onclick="openModalEditAnimal(<?php echo htmlspecialchars(json_encode($animal)); ?>)">Editar</a>
-                                    <a href="#" onclick="openModalDeleteAnimal(<?php echo $animal['id_animal']; ?>)">Deletar</a>
+                                <td style="text-align: center;">
+                                    <a href="#" class="btn-edit"
+                                        onclick='openModalEditAnimal(<?php echo json_encode($animal, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>)'>Editar</a>
+                                    <a href="#" class="btn-delete"
+                                        onclick="openModalDeleteAnimal(<?php echo $animal['id_animal']; ?>)">Deletar</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -261,36 +262,67 @@ if (isset($_GET['error'])) {
             <h2>Editar Animal</h2>
             <form action="../../app/controllers/AnimalController.php?action=editar_animal" id="editarForm" method="POST"
                 enctype="multipart/form-data">
-                <input type="hidden" id="id_animal" name="id_animal">
-                <label for="raca">Raça:</label>
-                <input type="text" id="raca" name="raca" required>
-                <label for="peso">Peso:</label>
-                <input type="text" id="peso" name="peso" required>
-                <label for="idade">Idade:</label>
-                <input type="text" id="idade" name="idade" required>
-                <label for="porte">Porte:</label>
-                <input type="text" id="porte" name="porte" required>
-                <label for="descricao">Descrição:</label>
-                <textarea id="descricao" name="descricao"></textarea>
-                <label for="imagem">Imagem:</label>
-                <input type="file" id="imagem" name="imagem">
-                <input type="hidden" id="imagem_atual" name="imagem_atual">
+                <input type="hidden" id="edit_id_animal" name="edit_id_animal">
 
-                <label for="status_adocao">Status da Adoção:</label>
-                <select id="status_adocao" name="status_adocao">
-                    <option value="1">Disponível</option>
-                    <option value="2">Em Processo</option>
-                    <option value="3">Adotado</option>
-                </select>
+                <div class="form-group">
+                    <label for="raca">Raça:</label>
+                    <input type="text" id="edit_raca" name="edit_raca" required>
+                </div>
 
-                <button type="submit">Salvar Alterações</button>
+                <div class="form-group">
+                    <label for="sexo">Sexo:</label>
+                    <input type="text" id="edit_sexo" name="edit_sexo" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="peso">Peso (kg):</label>
+                    <input type="text" id="edit_peso" name="edit_peso" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="idade">Idade:</label>
+                    <input type="text" id="edit_idade" name="edit_idade" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_porte">Porte:</label>
+                    <select id="edit_porte" name="edit_porte" required>
+                        <option value="pequeno">Pequeno</option>
+                        <option value="médio">Médio</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_descricao">Descrição:</label>
+                    <textarea id="edit_descricao" name="edit_descricao"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_imagem">Imagem:</label>
+                    <input type="file" id="edit_imagem" name="edit_imagem">
+                    <input type="hidden" imagem_atual" name="imagem_atual">
+                </div>
+
+                <div class="form-group">
+                    <label for="status_adocao">Status da Adoção:</label>
+                    <select id="status_adocao" name="status_adocao">
+                        <option value="1">Disponível</option>
+                        <option value="2">Em Processo</option>
+                        <option value="3">Adotado</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit">Salvar Alterações</button>
+                </div>
             </form>
         </div>
     </div>
 
     <div id="animalDeletModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal('deleteModal')">&times;</span>
+            <span class="close" onclick="closeModal('animalDeletModal')">&times;</span>
             <h2>Deletar Animal</h2>
             <form action="../../app/controllers/AnimalController.php?action=deletar_animal" method="POST">
                 <input type="hidden" id="deleteId" name="id_animal">
@@ -342,14 +374,22 @@ if (isset($_GET['error'])) {
 
         function openModalEditAnimal(animal) {
             console.log("animal", animal)
-            document.getElementById("id_animal").value = animal.id_animal;
-            document.getElementById("raca").value = animal.raca;
-            document.getElementById("peso").value = animal.peso;
-            document.getElementById("idade").value = animal.idade;
-            document.getElementById("porte").value = animal.porte;
-            document.getElementById("sexo").value = animal.sexo;
-            document.getElementById("descricao").value = animal.descricao;
-            document.getElementById('status_adocao').value = animal.status_adocao;
+
+            const statusMap = {
+                "Disponível": "1",
+                "Em processo": "2",
+                "Adotado": "3"
+            };
+
+            const statusKey = animal.status_adocao ? animal.status_adocao.trim() : '';
+            document.getElementById("status_adocao").value = statusMap[statusKey] || '';
+            document.getElementById("edit_id_animal").value = animal.id_animal;
+            document.getElementById("edit_raca").value = animal.raca;
+            document.getElementById("edit_peso").value = animal.peso;
+            document.getElementById("edit_idade").value = animal.idade;
+            document.getElementById("edit_porte").value = animal.porte.toLowerCase();
+            document.getElementById("edit_sexo").value = animal.sexo;
+            document.getElementById("edit_descricao").value = animal.descricao;
 
             openModal('animalEditModal');
         }
