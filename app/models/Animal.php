@@ -110,12 +110,16 @@ class Animal
     {
         $query = "SELECT animal.*, usuario_ong.nome_fantasia 
               FROM " . $this->table_name . "
-              JOIN 
-              usuario_ong 
-              ON 
-              animal.id_ong = usuario_ong.id_ong";
+              JOIN usuario_ong 
+              ON animal.id_ong = usuario_ong.id_ong
+              WHERE animal.status_adocao = 1";
 
         $stmt = $this->conn->prepare($query);
+        if ($stmt === false) {
+            echo "Erro na preparação da query: " . $this->conn->error;
+            return [];
+        }
+
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -123,6 +127,7 @@ class Animal
         while ($row = $result->fetch_assoc()) {
             $todosAnimais[] = $row;
         }
+
         return $todosAnimais;
     }
 
@@ -184,6 +189,29 @@ class Animal
             return true;
         } else {
             echo "Erro ao executar a query: " . $stmt->error;
+            return false;
+        }
+    }
+
+    public function iniciarAdocao($id_animal, $id_usuario)
+    {
+        $query = "UPDATE " . $this->table_name . " 
+              SET status_adocao = 2, id_usuario = ? 
+              WHERE id_animal = ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        if ($stmt === false) {
+            echo "Erro ao preparar a consulta: " . $this->conn->error;
+            return false;
+        }
+
+        $stmt->bind_param("ii", $id_usuario, $id_animal);
+
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            echo "Erro ao executar a consulta: " . $stmt->error;
             return false;
         }
     }

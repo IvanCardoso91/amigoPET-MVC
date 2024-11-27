@@ -13,16 +13,6 @@ if (!isset($_SESSION['todos_animais'])) {
 }
 
 $todosAnimais = $_SESSION['todos_animais'] ?? null;
-$mensagem_sucesso = '';
-$mensagem_erro = '';
-
-if (isset($_GET['mensagem']) && $_GET['mensagem'] === 'sucesso') {
-    $mensagem_sucesso = "Mensagem enviada com sucesso!";
-}
-
-if (isset($_GET['mensagem']) && $_GET['mensagem'] === 'erro') {
-    $mensagem_erro = "Mensagem não foi enviada.";
-}
 ?>
 <html lang="pt-BR">
 
@@ -80,16 +70,9 @@ if (isset($_GET['mensagem']) && $_GET['mensagem'] === 'erro') {
     </header>
     <main>
 
-        <?php if ($mensagem_sucesso): ?>
-            <div class="success-message"><?php echo $mensagem_sucesso; ?></div>
-        <?php endif; ?>
-        <?php if ($mensagem_erro): ?>
-            <div class="error-message"><?php echo $mensagem_erro; ?></div>
-        <?php endif; ?>
-
         <div class="container">
             <?php foreach ($todosAnimais as $animal): ?>
-                <div class="card" data-id-animal="<?= $animal['id_animal']; ?>" data-id-ong="<?= $animal['id_ong']; ?>">
+                <div class="card" onclick="abrirModalAdocao(<?= $animal['id_animal']; ?>)">
                     <img src="<?= $animal['imagem']; ?>" alt="Imagem de <?= $animal['raca']; ?>">
                     <div class="info">
                         <h2><?= $animal['raca']; ?></h2>
@@ -104,18 +87,37 @@ if (isset($_GET['mensagem']) && $_GET['mensagem'] === 'erro') {
 
     </main>
 
-    <script>
-        const modal = document.getElementById("mensagemModal");
-        const closeModal = document.getElementById("closeModal");
+    <div id="adocaoModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModal" style="cursor: pointer; float: right;">&times;</span>
+            <h3>Iniciar Processo de Adoção</h3>
+            <p>Você deseja adotar este animal?</p>
+            <form id="adocaoForm" action="../controllers/AnimalController.php?action=iniciar_processo_adocao"
+                method="POST">
+                <input type="hidden" id="id_animal" name="id_animal" value="">
+                <button type="submit">Iniciar Processo de Adoção</button>
+            </form>
+        </div>
+    </div>
 
-        // Função para abrir a modal
-        function abrirModal() {
-            modal.style.display = "flex"; // Isso faz a modal aparecer centralizada
+    <script>
+        const modal = document.getElementById("adocaoModal");
+        const closeModal = document.getElementById("closeModal");
+        const idAnimalInput = document.getElementById("id_animal");
+
+        function abrirModalAdocao(idAnimal) {
+            idAnimalInput.value = idAnimal;
+            modal.style.display = "flex";
         }
 
-        // Função para fechar a modal
         closeModal.addEventListener("click", () => {
             modal.style.display = "none";
+        });
+
+        window.addEventListener("click", (event) => {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
         });
     </script>
 </body>

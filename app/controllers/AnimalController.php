@@ -134,6 +134,28 @@ class AnimalController
             echo "Erro ao deletar o animal.";
         }
     }
+
+    public function iniciarProcessoAdocao()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id_animal = $_POST['id_animal'];
+            $id_usuario = $_SESSION['id_usuario'];
+
+            if (!$id_animal || !$id_usuario) {
+                echo "Erro: Animal ou usuário não identificado.";
+                exit();
+            }
+
+            if ($this->animal->iniciarAdocao($id_animal, $id_usuario)) {
+                $todosAnimais = $this->animal->buscarTodosAnimais();
+                $_SESSION['todos_animais'] = $todosAnimais;
+                header("Location: ../views/listagem.php?mensagem=sucesso");
+            } else {
+                header("Location: ../views/listagem.php?mensagem=erro");
+            }
+            exit();
+        }
+    }
 }
 
 if (isset($_GET['action'])) {
@@ -150,6 +172,9 @@ if (isset($_GET['action'])) {
             break;
         case 'deletar_animal':
             $controller->deletarAnimal($_POST['id_animal']);
+            break;
+        case 'iniciar_processo_adocao':
+            $controller->iniciarProcessoAdocao();
             break;
         default:
             echo "Ação não reconhecida.";
