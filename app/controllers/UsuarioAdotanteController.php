@@ -62,8 +62,7 @@ class UsuarioAdotanteController
             $this->usuarioAdotante->data_nascimento = $_POST['data_nascimento'];
 
             if ($this->usuarioAdotante->cadastrar()) {
-                echo "Cadastro realizado com sucesso!";
-                require __DIR__ . '../../views/sucesso-cadastro-usuario.html';
+                header("Location: ../views/sucesso-cadastro-usuario.html");
             } else {
                 echo "Erro ao cadastrar!";
             }
