@@ -58,8 +58,7 @@ class UsuarioOngController
             $this->usuarioOng->senha = $_POST['senha'];
 
             if ($this->usuarioOng->cadastrar()) {
-                echo "Cadastro realizado com sucesso!";
-                require __DIR__ . '../../views/sucesso-cadastro-ong.html';
+                header("Location: ../views/sucesso-cadastro-ong.html");
             } else {
                 echo "Erro ao cadastrar!";
             }
