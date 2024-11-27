@@ -3,12 +3,12 @@ ob_start();
 session_start();
 // views/info-usuario.php
 if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'adotante') {
-  header("Location: ../../app/views/erro-autenticacao.html");
-  exit();
+    header("Location: ../../app/views/erro-autenticacao.html");
+    exit();
 }
 
 if (session_status() === PHP_SESSION_NONE) {
-  session_start();
+    session_start();
 }
 
 $nome_completo = htmlspecialchars($_SESSION['nome_completo']);
@@ -35,7 +35,7 @@ $animaisEmAdocao = $animalController->getAnimaisAdotante();
     <title>Info Usuário - Amigopet</title>
     <link rel="stylesheet" href="../views/style/style-info-usuario.css?v=1.0" />
     <style>
-    @import url("https://fonts.googleapis.com/css2?family=Jomolhari&display=swap");
+        @import url("https://fonts.googleapis.com/css2?family=Jomolhari&display=swap");
     </style>
 </head>
 
@@ -92,24 +92,24 @@ $animaisEmAdocao = $animalController->getAnimaisAdotante();
                 </thead>
                 <tbody>
                     <?php if (!empty($animaisEmAdocao)): ?>
-                    <?php foreach ($animaisEmAdocao as $animal): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($animal['raca']); ?></td>
-                        <td><?php echo ucfirst(htmlspecialchars($animal['porte'])); ?></td>
-                        <td><?php echo htmlspecialchars($animal['idade']); ?> anos</td>
-                        <td><?php echo htmlspecialchars($animal['empresa']); ?></td>
-                        <td>
-                            <span
-                                class="status-tag <?php echo strtolower(str_replace(' ', '-', $animal['status_adocao'])); ?>">
-                                <?php echo $animal['status_adocao']; ?>
-                            </span>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
+                        <?php foreach ($animaisEmAdocao as $animal): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($animal['raca']); ?></td>
+                                <td><?php echo ucfirst(htmlspecialchars($animal['porte'])); ?></td>
+                                <td><?php echo htmlspecialchars($animal['idade']); ?> anos</td>
+                                <td><?php echo htmlspecialchars($animal['empresa']); ?></td>
+                                <td>
+                                    <span
+                                        class="status-tag <?php echo strtolower(str_replace(' ', '-', $animal['status_adocao'])); ?>">
+                                        <?php echo $animal['status_adocao']; ?>
+                                    </span>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     <?php else: ?>
-                    <tr>
-                        <td colspan="5">Você ainda não iniciou o processo de adoção de nenhum animal.</td>
-                    </tr>
+                        <tr>
+                            <td colspan="5">Você ainda não iniciou o processo de adoção de nenhum animal.</td>
+                        </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
@@ -144,7 +144,8 @@ $animaisEmAdocao = $animalController->getAnimaisAdotante();
                 <label for="edit-email">E-mail do Usuário:</label>
                 <input type="email" id="edit-email" name="email" value="<?php echo $email; ?>" required />
                 <label for="edit-contact">Número para Contato:</label>
-                <input type="text" id="edit-contact" name="contact" value="<?php echo $telefone; ?>" required />
+                <input type="text" id="edit-contact" name="contact" maxlength="15" value="<?php echo $telefone; ?>"
+                    required />
                 <label for="edit-name">Nome Completo:</label>
                 <input type="text" id="edit-name" name="nome" value="<?php echo $nome_completo; ?>" required />
                 <div class="buttons">
@@ -155,52 +156,75 @@ $animaisEmAdocao = $animalController->getAnimaisAdotante();
     </div>
 
     <script>
-    const cpfElement = document.getElementById('cpf');
-    const telefoneElement = document.getElementById('telefone');
+        const cpfElement = document.getElementById('cpf');
+        const telefoneElement = document.getElementById('telefone');
 
-    cnpjElement.textContent = formatarCpf(cnpjElement.textContent);
-    telefoneElement.textContent = formatarTelefone(telefoneElement.textContent);
+        cpfElement.textContent = formatarCpf(cpfElement.textContent);
+        telefoneElement.textContent = formatarTelefone(telefoneElement.textContent);
 
-    function openPasswordModal() {
-        document.getElementById("passwordModal").style.display = "flex";
-    }
+        function openPasswordModal() {
+            document.getElementById("passwordModal").style.display = "flex";
+        }
 
-    function closePasswordModal() {
-        document.getElementById("passwordModal").style.display = "none";
-    }
+        function closePasswordModal() {
+            document.getElementById("passwordModal").style.display = "none";
+        }
 
-    function openEditModal() {
-        document.getElementById("editModal").style.display = "flex";
-    }
+        function openEditModal() {
+            document.getElementById("editModal").style.display = "flex";
+        }
 
-    function closeEditModal() {
-        document.getElementById("editModal").style.display = "none";
-    }
+        function closeEditModal() {
+            document.getElementById("editModal").style.display = "none";
+        }
 
-    function showTab(tabIndex) {
-        document.querySelectorAll(".tab-content").forEach((tab) => {
-            tab.classList.remove("active");
+        function showTab(tabIndex) {
+            document.querySelectorAll(".tab-content").forEach((tab) => {
+                tab.classList.remove("active");
+            });
+            document.getElementById(`tab${tabIndex}`).classList.add("active");
+        }
+
+        function formatarTelefone(telefone) {
+            telefone = telefone.replace(/\D/g, '');
+            if (telefone.length === 10) {
+                return telefone.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
+            } else if (telefone.length === 11) {
+                return telefone.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+            }
+            return telefone;
+        }
+
+        function formatarCpf(cpf) {
+            cpf = cpf.replace(/\D/g, '');
+            if (cpf.length === 11) {
+                return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+            }
+            return cpf;
+        }
+
+        function aplicarMascaraTelefone(input) {
+            let valor = input.value.replace(/\D/g, '');
+
+            if (valor.length <= 10) {
+                valor = valor.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+            } else {
+                valor = valor.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            }
+
+            input.value = valor;
+        }
+
+        const telefoneInput = document.getElementById('edit-contact');
+        telefoneInput.addEventListener('input', function() {
+            aplicarMascaraTelefone(telefoneInput);
         });
-        document.getElementById(`tab${tabIndex}`).classList.add("active");
-    }
 
-    function formatarTelefone(telefone) {
-        telefone = telefone.replace(/\D/g, '');
-        if (telefone.length === 10) {
-            return telefone.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
-        } else if (telefone.length === 11) {
-            return telefone.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
-        }
-        return telefone;
-    }
-
-    function formatarCpf(cpf) {
-        cpf = cpf.replace(/\D/g, '');
-        if (cpf.length === 11) {
-            return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
-        }
-        return cpf;
-    }
+        window.onload = function() {
+            if (telefoneInput.value) {
+                aplicarMascaraTelefone(telefoneInput);
+            }
+        };
     </script>
 </body>
 

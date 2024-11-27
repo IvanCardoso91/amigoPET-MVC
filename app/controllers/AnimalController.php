@@ -80,8 +80,8 @@ class AnimalController
             $this->animal->descricao = $_POST['descricao'];
 
             if ($this->animal->cadastrar()) {
-                echo
-                $this->mostrarPagina();
+                echo "animal cadastrado com sucesso";
+                header("Location: ../views/info-ong.php");
             } else {
                 echo "Erro ao cadastrar o animal.";
             }
@@ -99,7 +99,6 @@ class AnimalController
             $this->animal->descricao = $_POST['edit_descricao'];
             $this->animal->status_adocao = $_POST['status_adocao'];
 
-            // Verifica se foi feito upload de nova imagem
             if (isset($_FILES['imagem']) && $_FILES['imagem']['size'] > 0) {
                 $imagem = $_FILES['imagem'];
                 $extensao = strtolower(pathinfo($imagem['name'], PATHINFO_EXTENSION));
@@ -112,7 +111,6 @@ class AnimalController
                     return;
                 }
             } else {
-                // Manter a imagem atual
                 $this->animal->imagem = $_POST['imagem_atual'];
             }
 

@@ -271,7 +271,10 @@ if (isset($_GET['error'])) {
 
                 <div class="form-group">
                     <label for="sexo">Sexo:</label>
-                    <input type="text" id="edit_sexo" name="edit_sexo" required>
+                    <select id="edit_sexo" name="edit_sexo" required>
+                        <option value="1">Macho</option>
+                        <option value="0">Fêmea</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -299,9 +302,9 @@ if (isset($_GET['error'])) {
                 </div>
 
                 <div class="form-group">
-                    <label for="edit_imagem">Imagem:</label>
-                    <input type="file" id="edit_imagem" name="edit_imagem">
-                    <input type="hidden" imagem_atual" name="imagem_atual">
+                    <label for="imagem">Imagem:</label>
+                    <input type="file" id="imagem" name="imagem">
+                    <input type="hidden" id="imagem_atual" name="imagem_atual" value="<?php echo $animal['imagem']; ?>">
                 </div>
 
                 <div class="form-group">

@@ -5,7 +5,8 @@ class Animal
     private $table_name = "animal"; // Nome da tabela
 
     // Propriedades do animal (campos da tabela)
-    public $id_animal; // ID do animal (auto incremento)
+    public $id_animal;
+    public $id_usuario; // ID do animal (auto incremento)
     public $id_ong;    // ID da ONG (chave estrangeira)
     public $id_tipo;   // ID do tipo de animal (chave estrangeira)
     public $raca;      // Raça do animal
@@ -134,7 +135,7 @@ class Animal
     public function editarAnimal()
     {
         $query = "UPDATE " . $this->table_name . " 
-              SET raca = ?, peso = ?, idade = ?, porte = ?, descricao = ?, imagem = ?, status_adocao = ?
+              SET raca = ?, peso = ?, idade = ?, porte = ?, descricao = ?, imagem = ?, status_adocao = ?, id_usuario = ?
               WHERE id_animal = ?";
 
         $stmt = $this->conn->prepare($query);
@@ -153,8 +154,14 @@ class Animal
         $this->status_adocao = htmlspecialchars(strip_tags($this->status_adocao));
         $this->id_animal = htmlspecialchars(strip_tags($this->id_animal));
 
+        if ($this->status_adocao == 1) {
+            $id_usuario = null;
+        } else {
+            $id_usuario = $this->id_usuario;
+        }
+
         $stmt->bind_param(
-            'ssisssii',
+            'ssisssiis',
             $this->raca,
             $this->peso,
             $this->idade,
@@ -162,6 +169,7 @@ class Animal
             $this->descricao,
             $this->imagem,
             $this->status_adocao,
+            $id_usuario,
             $this->id_animal
         );
 
