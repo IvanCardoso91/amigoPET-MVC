@@ -128,6 +128,7 @@ class AnimalController
     {
         if ($this->animal->deletarAnimal($id_animal)) {
             echo "Animal deletado com sucesso!";
+            header("Location: ../views/info-ong.php");
             $this->mostrarPagina();
         } else {
             echo "Erro ao deletar o animal.";
