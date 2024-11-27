@@ -166,23 +166,106 @@ class UsuarioOngController
 
     private function enviarEmailRecuperacao($email, $nova_senha)
     {
+        $config = include __DIR__ . '../../../config/config.php';
         $mail = new PHPMailer(true);
 
         try {
             $mail->isSMTP();
-            $mail->Host = 'smtp.hostinger.com';
+            $mail->Host = $config['smtp']['host'];
             $mail->SMTPAuth = true;
-            $mail->Username = 'recuperarsenha@amigopet-dev.com.br';
-            $mail->Password = 'Iv@ng7h3d4f1';
+            $mail->Username = $config['smtp']['username'];
+            $mail->Password = $config['smtp']['password'];
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 587;
+            $mail->Port = $config['smtp']['port'];
 
-            $mail->setFrom('recuperarsenha@amigopet-dev.com.br', 'Amigopet');
+            $mail->setFrom($config['smtp']['from_email'], $config['smtp']['from_name']);
             $mail->addAddress($email);
 
             $mail->isHTML(true);
             $mail->Subject = 'Recuperação de Senha';
-            $mail->Body    = "Sua nova senha de acesso à ONG é: <strong>{$nova_senha}</strong>";
+            $mail->Body = "
+                <html>
+                <head>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            background-color: #FFF9EB;
+                            margin: 0;
+                            padding: 0;
+                        }
+                        .email-container {
+                            max-width: 600px;
+                            margin: 20px auto;
+                            background-color: #A0704C;
+                            border-radius: 5px;
+                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                            padding: 20px;
+                            color: #FFF9EB;
+                        }
+                        .header {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            margin-bottom: 20px;
+                        }
+                        .header img {
+                            height: 80px;
+                            width: auto;
+                        }
+                        .title {
+                            text-align: center;
+                            color: #EFDCAE;
+                            font-size: 24px;
+                            margin-bottom: 10px;
+                        }
+                        .body {
+                            text-align: center;
+                            font-size: 18px;
+                            line-height: 1.6;
+                        }
+                        .body strong {
+                            color: #FFF9EB;
+                            background-color: #EFDCAE;
+                            padding: 5px 10px;
+                            border-radius: 5px;
+                        }
+                        .footer {
+                            text-align: center;
+                            margin-top: 20px;
+                            font-size: 14px;
+                            color: #EFDCAE;
+                        }
+                        .footer a {
+                            color: #FFF9EB;
+                            text-decoration: none;
+                        }
+                        .footer a:hover {
+                            text-decoration: underline;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class='email-container'>
+                        <div class='header'>
+                            <img src='https://via.placeholder.com/150x50?text=LOGO' alt='Amigopet Logo'>
+                        </div>
+                        <div class='title'>Recuperação de Senha</div>
+                        <div class='body'>
+                            <p>Olá,</p>
+                            <p>Sua nova senha para acessar a ONG é:</p>
+                            <p><strong>{$nova_senha}</strong></p>
+                            <p>Recomendamos que você altere essa senha ao fazer login.</p>
+                            <p>Obrigado por fazer parte da nossa comunidade!</p>
+                        </div>
+                        <div class='footer'>
+                            <p>Amigopet - ONG para proteção animal</p>
+                            <p><a href='#'>www.amigopet-dev.com.br</a></p>
+                            <p>Este é um e-mail automático. Por favor, não responda.</p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            ";
 
             $mail->send();
             return true;
