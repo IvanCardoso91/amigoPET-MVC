@@ -347,6 +347,29 @@ button:hover {
     background-color: #45a049;
 }
 
+.status-tag {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 0.9em;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+}
+
+.status-tag.disponível {
+    background-color: #007BFF;
+}
+
+.status-tag.em-processo {
+    background-color: #FFC107;
+    color: #000;
+}
+
+.status-tag.adotado {
+    background-color: #DC3545;
+}
+
 @media (max-width: 600px) {
     .container {
         padding: 10px;

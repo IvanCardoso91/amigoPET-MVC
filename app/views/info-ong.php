@@ -182,7 +182,12 @@ if (isset($_GET['error'])) {
                                 <td><?php echo ucfirst($animal['porte']); ?></td>
                                 <td><?php echo $animal['sexo'] == 1 ? 'Macho' : 'Fêmea'; ?></td>
                                 <td><?php echo $animal['descricao']; ?></td>
-                                <td><?php echo $animal['status_adocao']; ?></td>
+                                <td>
+                                    <span
+                                        class="status-tag <?php echo strtolower(str_replace(' ', '-', $animal['status_adocao'])); ?>">
+                                        <?php echo $animal['status_adocao']; ?>
+                                    </span>
+                                </td>
                                 <td>
                                     <?php if (!empty($animal['nome_adotante'])): ?>
                                         <button onclick="openAdotanteModal('<?php echo htmlspecialchars(json_encode([
