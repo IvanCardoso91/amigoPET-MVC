@@ -82,6 +82,7 @@ class AnimalController
             if ($this->animal->cadastrar()) {
                 echo "animal cadastrado com sucesso";
                 header("Location: ../views/info-ong.php");
+                $this->mostrarPagina();
             } else {
                 echo "Erro ao cadastrar o animal.";
             }
